@@ -1,0 +1,1485 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0a0a14">
+<title>2PMK</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<link href="https://fonts.googleapis.com/css2?family=Boogaloo&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pink: #ff9de2; --gold: #ffce85; --blue: #85e0ff;
+  --bg: #0a0a14; --card: rgba(255,255,255,.05);
+  --border: rgba(255,255,255,.1); --text: #f0eaff;
+  --sub: rgba(240,234,255,.45); --dim: rgba(240,234,255,.25);
+  --nav-h: 62px; --logo-h: 48px;
+  color-scheme: dark;
+}
+
+/* LOGO BAR */
+.logo-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+  height: calc(var(--logo-h) + env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+  background: rgba(10,10,20,.92);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  backdrop-filter: blur(18px);
+  display: flex; align-items: center; justify-content: flex-start;
+  padding-left: 18px;
+}
+.logo-text {
+  font-family: 'Boogaloo', cursive;
+  font-size: 1.7rem; letter-spacing: .08em;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  text-shadow:
+    -2px -2px 0 #000,
+     2px -2px 0 #000,
+    -2px  2px 0 #000,
+     2px  2px 0 #000,
+     3px  3px 0 rgba(0,0,0,.4);
+  user-select: none; line-height: 1;
+}
+/* 시스템 설정과 무관하게 항상 다크 강제 */
+@media (prefers-color-scheme: light) {
+  :root { color-scheme: dark; }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; background: #0a0a14 !important; }
+body { font-family: 'Pretendard', sans-serif; background: #0a0a14 !important; color: #f0eaff !important;
+  overflow-x: hidden; overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+/* 모든 입력 요소 다크 강제 */
+input, select, textarea, button {
+  color: #f0eaff;
+  background-color: transparent;
+  -webkit-appearance: none;
+}
+/* iOS Safari 입력창 다크 강제 */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #f0eaff !important;
+  -webkit-box-shadow: 0 0 0px 1000px #1a1530 inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* =========== LOTTO PAGE =========== */
+.lotto-wrap { max-width: 480px; margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + var(--logo-h) + 20px) 16px 16px; }
+.lotto-header { text-align: center; margin-bottom: 22px; }
+.lotto-title { font-family: 'Pretendard', sans-serif; font-size: 1.9rem; font-weight: 800;
+  color: #ffffff; -webkit-text-fill-color: #ffffff; }
+.lotto-sub { font-size: .78rem; color: var(--dim); margin-top: 4px; }
+
+/* MODE TABS */
+.mode-tabs { display: flex; gap: 6px; background: rgba(255,255,255,.05);
+  border: 1px solid var(--border); border-radius: 14px; padding: 5px; margin-bottom: 18px; }
+.mode-tab { flex: 1; background: transparent; border: none; border-radius: 10px;
+  padding: 9px 6px; font-family: 'Pretendard', sans-serif; font-size: .78rem; font-weight: 700;
+  color: var(--sub); cursor: pointer; transition: all .18s; text-align: center; line-height: 1.3; }
+.mode-tab.active { background: rgba(255,229,102,.15); color: #ffe566; }
+.mode-tab:active { opacity: .7; }
+
+/* BALLS */
+.ball-stage { background: rgba(255,255,255,.04); border: 1px solid var(--border);
+  border-radius: 20px; padding: 24px 16px; margin-bottom: 14px; min-height: 120px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; }
+.balls-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.ball { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-family: 'Pretendard', sans-serif; font-size: .95rem;
+  font-weight: 700; color: #fff; flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(0,0,0,.35), inset 0 1px 2px rgba(255,255,255,.25);
+  transition: transform .15s; animation: ballPop .4s ease both; }
+@keyframes ballPop { 0%{transform:scale(0) rotate(-20deg);opacity:0} 70%{transform:scale(1.12)} 100%{transform:scale(1);opacity:1} }
+.ball.b1  { background: linear-gradient(145deg,#f5d76e,#e8a000); }
+.ball.b2  { background: linear-gradient(145deg,#6ea8f5,#2563d4); }
+.ball.b3  { background: linear-gradient(145deg,#f08080,#c0392b); }
+.ball.b4  { background: linear-gradient(145deg,#7be8a0,#1a9c47); }
+.ball.b5  { background: linear-gradient(145deg,#b0b0c8,#606080); }
+
+.ball-placeholder { display: flex; gap: 10px; }
+.ball-ph { width: 46px; height: 46px; border-radius: 50%;
+  background: rgba(255,255,255,.06); border: 2px dashed rgba(255,255,255,.12); }
+
+/* GENERATE BTN */
+.gen-btn { width: 100%; background: linear-gradient(135deg,#ffe566,#ffb347); border: none;
+  border-radius: 14px; padding: 15px; font-family: 'Pretendard', sans-serif;
+  font-size: 1.15rem; color: #1a1000; cursor: pointer; transition: all .15s;
+  margin-bottom: 10px; letter-spacing: .02em; }
+.gen-btn:active { transform: scale(.97); filter: brightness(.93); }
+
+.gen-multi-btn { width: 100%; background: rgba(255,229,102,.08); border: 1px solid rgba(255,229,102,.25);
+  border-radius: 13px; padding: 12px; font-family: 'Pretendard', sans-serif;
+  font-size: .95rem; color: #ffe566; cursor: pointer; transition: all .15s; margin-bottom: 14px; }
+.gen-multi-btn:active { background: rgba(255,229,102,.15); }
+
+/* ANALYSIS TAGS */
+.analysis-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 6px; }
+.a-tag { padding: 4px 10px; border-radius: 20px; font-size: .72rem; font-weight: 700; }
+.a-tag.good { background: rgba(123,232,160,.15); border: 1px solid rgba(123,232,160,.3); color: #7be8a0; }
+.a-tag.warn { background: rgba(255,206,133,.12); border: 1px solid rgba(255,206,133,.3); color: var(--gold); }
+.a-tag.bad  { background: rgba(255,100,100,.1);  border: 1px solid rgba(255,100,100,.25); color: #ff8a8a; }
+
+/* MULTI RESULTS */
+.multi-sets { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.multi-set { background: rgba(255,255,255,.04); border: 1px solid var(--border);
+  border-radius: 14px; padding: 12px 14px; }
+.ms-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.ms-label { font-size: .72rem; color: var(--dim); font-weight: 700; }
+.ms-copy { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 7px; padding: 3px 9px; font-size: .68rem; color: var(--sub); cursor: pointer; }
+.ms-copy:active { background: rgba(255,255,255,.14); }
+.ms-balls { display: flex; gap: 7px; }
+.ms-ball { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-family: 'Pretendard', sans-serif; font-size: .8rem;
+  color: #fff; flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,.3), inset 0 1px 2px rgba(255,255,255,.2); }
+
+/* SAVE HISTORY */
+.lotto-save-btn { width: 100%; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 13px; padding: 12px; font-family: 'Pretendard', sans-serif;
+  font-size: .92rem; color: var(--sub); cursor: pointer; transition: all .15s; margin-bottom: 18px; }
+.lotto-save-btn:active { background: rgba(255,255,255,.1); color: var(--text); }
+
+/* LOTTO HISTORY */
+.lh-section { margin-bottom: 18px; }
+.lh-title { font-size: .72rem; color: var(--dim); letter-spacing: .05em; margin-bottom: 10px; }
+.lh-list { display: flex; flex-direction: column; gap: 7px; }
+.lh-item { background: var(--card); border: 1px solid var(--border);
+  border-radius: 13px; padding: 11px 13px; display: flex; align-items: center; gap: 10px; }
+.lh-item-balls { display: flex; gap: 5px; flex: 1; flex-wrap: wrap; }
+.lh-item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.lh-date { font-size: .65rem; color: var(--dim); }
+.lh-del { background: transparent; border: 1px solid rgba(255,80,80,.18); border-radius: 7px;
+  width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,100,100,.4); cursor: pointer; font-size: .75rem; }
+.lh-del:active { color: #ff6464; background: rgba(255,80,80,.1); }
+.lh-empty { text-align: center; padding: 30px 0; }
+.lh-empty-e { font-size: 2.5rem; display: block; opacity: .3; margin-bottom: 8px; }
+.lh-empty-t { font-size: .82rem; color: var(--dim); }
+
+/* SECTION DIVIDER */
+.lt-divider { height: 1px; background: rgba(255,255,255,.06); margin: 18px 0; }
+
+/* MODE DESCRIPTIONS */
+.mode-desc { background: rgba(255,229,102,.05); border: 1px solid rgba(255,229,102,.15);
+  border-radius: 12px; padding: 11px 13px; margin-bottom: 14px; }
+.md-row { display: flex; align-items: flex-start; gap: 7px; margin-bottom: 4px; }
+.md-row:last-child { margin-bottom: 0; }
+.md-icon { font-size: .9rem; flex-shrink: 0; margin-top: 1px; }
+.md-text { font-size: .75rem; color: rgba(255,229,102,.7); line-height: 1.45; }
+
+/* STARS */
+.stars { position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse at 20% 30%,rgba(80,40,120,.15) 0%,transparent 60%),
+              radial-gradient(ellipse at 80% 70%,rgba(20,60,100,.15) 0%,transparent 60%); }
+.stars::before { content:''; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 15%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 28% 42%,rgba(255,255,255,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 54% 18%,rgba(255,255,255,.7) 0%,transparent 100%),
+    radial-gradient(1px 1px at 76% 58%,rgba(255,255,255,.3) 0%,transparent 100%),
+    radial-gradient(1px 1px at 91% 9%,rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 44% 82%,rgba(255,255,255,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 14% 71%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 66% 38%,rgba(255,255,255,.3) 0%,transparent 100%),
+    radial-gradient(1px 1px at 86% 86%,rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 38% 4%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 96% 41%,rgba(255,255,255,.4) 0%,transparent 100%); }
+
+/* BOTTOM NAV */
+.bot-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  display: flex; background: rgba(12,10,24,.98) !important; border-top: 1px solid rgba(255,255,255,.12);
+  backdrop-filter: blur(16px); padding-bottom: env(safe-area-inset-bottom); }
+.bot-nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; padding: 10px 4px 8px; background: none; border: none; cursor: pointer;
+  color: var(--dim); font-family: 'Pretendard', sans-serif; font-size: .65rem; font-weight: 700;
+  transition: color .2s; position: relative; }
+.bot-nav-btn .nav-icon { font-size: 1.3rem; line-height: 1; transition: transform .2s; }
+.bot-nav-btn.active { color: var(--pink); }
+.bot-nav-btn.active .nav-icon { transform: scale(1.15); }
+.bot-nav-btn:active { opacity: .7; }
+
+/* PAGES */
+.page { display: none; position: relative; z-index: 1;
+  min-height: 100vh; padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 12px); }
+.page.active { display: block; }
+
+/* =========== GAME PAGE =========== */
+.game-wrap { max-width: 480px; margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + var(--logo-h) + 28px) 16px 16px;
+  min-height: calc(100vh - var(--nav-h));
+  display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+.game-header { text-align: center; margin-bottom: 20px; }
+.game-title { font-family: 'Pretendard', sans-serif; font-size: 2rem; font-weight: 800; line-height: 1.1;
+  color: #ffffff; -webkit-text-fill-color: #ffffff; }
+.game-sub { font-size: .8rem; color: var(--sub); margin-top: 4px; }
+
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+  padding: 20px 18px; width: 100%; }
+
+
+
+
+/* RESULT */
+.result-area { display: none; text-align: center; animation: fadeUp .4s ease; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+.res-emoji { font-size: 4.5rem; display: block; margin-bottom: 6px; animation: pop .5s ease; }
+@keyframes pop { 0%{transform:scale(0)} 65%{transform:scale(1.15)} 100%{transform:scale(1)} }
+.res-name { font-family: 'Pretendard', sans-serif; font-size: 1.9rem; font-weight: 800;
+  color: #ffffff; -webkit-text-fill-color: #ffffff; margin-bottom: 6px; }
+.res-desc { font-size: .83rem; color: rgba(240,234,255,.6); line-height: 1.55; margin-bottom: 12px; }
+.res-tags { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 12px; }
+.tag { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.13);
+  border-radius: 20px; padding: 3px 10px; font-size: .72rem; color: rgba(240,234,255,.65); }
+.runner-up { margin-bottom: 12px; }
+.ru-label { font-size: .7rem; color: var(--dim); margin-bottom: 6px; }
+.ru-items { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.ru-chip { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09);
+  border-radius: 10px; padding: 5px 10px; font-size: .78rem; color: rgba(240,234,255,.5); }
+
+.eat-btn { width: 100%; background: linear-gradient(135deg,var(--pink),var(--gold)); border: none;
+  border-radius: 14px; padding: 15px; font-family: 'Pretendard', sans-serif;
+  font-size: 1.1rem; color: #1a0a2e; cursor: pointer; margin-bottom: 8px;
+  transition: all .15s; -webkit-user-select: none; user-select: none; }
+.eat-btn:active { transform: scale(.97); filter: brightness(.95); }
+.eat-btn.eaten { background: linear-gradient(135deg,#7be8a0,#5bcfdc); }
+.eat-btn:disabled { opacity: .8; cursor: default; }
+
+.again-btn { width: 100%; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 13px; padding: 13px; font-family: 'Pretendard', sans-serif;
+  font-size: .95rem; color: var(--sub); cursor: pointer; transition: all .15s; }
+.again-btn:active { background: rgba(255,255,255,.1); }
+.ladder-btn { width: 100%; background: rgba(133,224,255,.07); border: 1px solid rgba(133,224,255,.22);
+  border-radius: 13px; padding: 13px; font-family: 'Pretendard', sans-serif;
+  font-size: .95rem; color: #85e0ff; cursor: pointer; transition: all .15s; }
+.ladder-btn:active { background: rgba(133,224,255,.15); }
+.tip { margin-top: 10px; font-size: .73rem; color: var(--dim); text-align: center; }
+
+/* RANDOM */
+.sep { display: flex; align-items: center; gap: 8px; margin: 14px 0; }
+.sep-line { flex: 1; height: 1px; background: rgba(255,255,255,.07); }
+.sep-txt { font-size: .7rem; color: var(--dim); }
+.rnd-btn { width: 100%; background: rgba(255,255,255,.03); border: 1px dashed rgba(255,255,255,.18);
+  border-radius: 13px; padding: 12px; color: var(--sub); font-family: 'Pretendard', sans-serif;
+  font-size: .83rem; cursor: pointer; transition: all .15s; }
+.rnd-btn:active { border-color: rgba(255,206,133,.5); color: var(--gold); }
+
+.roulette-wrap { display: none; text-align: center; padding: 12px 0; }
+.spin-ring { width: 80px; height: 80px; border-radius: 50%;
+  border: 3px solid rgba(255,157,226,.25); border-top-color: var(--pink);
+  margin: 0 auto 8px; display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; animation: spin .35s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.spin-name { font-family: 'Pretendard', sans-serif; font-size: 1rem; color: var(--sub); }
+
+/* =========== HISTORY PAGE =========== */
+.hist-wrap { max-width: 480px; margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + var(--logo-h) + 20px) 16px 16px; }
+
+.hist-top { margin-bottom: 18px; }
+.hist-title { font-family: 'Pretendard', sans-serif; font-size: 1.6rem; color: var(--text); }
+.hist-sub { font-size: .75rem; color: var(--dim); margin-top: 3px; }
+
+.stat-row { display: flex; gap: 8px; margin-bottom: 18px; }
+.stat-card { flex: 1; background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 12px 10px; text-align: center; }
+.stat-num { font-family: 'Pretendard', sans-serif; font-size: 1.4rem; color: var(--pink); line-height: 1; }
+.stat-lbl { font-size: .65rem; color: var(--dim); margin-top: 3px; }
+
+.fav-scroll { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 18px;
+  scrollbar-width: none; }
+.fav-scroll::-webkit-scrollbar { display: none; }
+.fav-chip { flex-shrink: 0; display: flex; align-items: center; gap: 5px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 6px 12px; }
+.fav-chip.top { border-color: rgba(255,206,133,.4); background: rgba(255,206,133,.07); }
+.fav-chip .fc-e { font-size: 1rem; }
+.fav-chip .fc-n { font-size: .78rem; font-weight: 700; color: rgba(240,234,255,.7); }
+.fav-chip.top .fc-n { color: var(--gold); }
+.fav-chip .fc-c { font-size: .68rem; color: var(--dim); }
+
+/* HEAT */
+.heat-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 14px; margin-bottom: 18px; }
+.heat-label { font-size: .7rem; color: var(--dim); margin-bottom: 10px; letter-spacing: .05em; }
+.heat-grid { display: flex; gap: 3px; flex-wrap: wrap; }
+.hc { width: 12px; height: 12px; border-radius: 2px; background: rgba(255,255,255,.05); flex-shrink: 0; }
+.hc.h1 { background: rgba(255,157,226,.25); }
+.hc.h2 { background: rgba(255,157,226,.55); }
+.hc.h3 { background: rgba(255,157,226,.85); }
+
+/* TIMELINE */
+.tl-month { font-family: 'Pretendard', sans-serif; font-size: .78rem;
+  color: var(--dim); letter-spacing: .05em; margin: 20px 0 10px;
+  display: flex; align-items: center; gap: 8px; }
+.tl-month::after { content:''; flex:1; height:1px; background:rgba(255,255,255,.06); }
+
+.tl-day { margin-bottom: 4px; }
+.tl-day-hd { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.tl-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,157,226,.3); flex-shrink:0; }
+.tl-day-lbl { font-size: .75rem; font-weight: 700; color: var(--sub); }
+.tl-day-cnt { font-size: .65rem; background: rgba(255,255,255,.06); border-radius: 10px;
+  padding: 2px 7px; color: var(--dim); }
+
+.tl-entries { padding-left: 16px; border-left: 1px solid rgba(255,255,255,.05);
+  margin-left: 3px; padding-bottom: 10px; display: flex; flex-direction: column; gap: 6px; }
+.tl-entry { display: flex; align-items: center; gap: 10px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 13px; padding: 11px 13px; }
+.te-emoji { font-size: 1.6rem; flex-shrink: 0; width: 36px; text-align: center; }
+.te-body { flex: 1; min-width: 0; }
+.te-name { font-family: 'Pretendard', sans-serif; font-size: .95rem; }
+.te-time { font-size: .68rem; color: var(--dim); margin-top: 1px; }
+.te-note { font-size: .73rem; color: var(--sub); margin-top: 3px; font-style: italic;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.te-del { background: transparent; border: 1px solid rgba(255,80,80,.18); border-radius: 7px;
+  width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,100,100,.4); cursor: pointer; font-size: .8rem; flex-shrink: 0; }
+.te-del:active { background: rgba(255,80,80,.12); color: #ff6464; }
+
+.hist-empty { text-align: center; padding: 60px 20px; }
+.he-emoji { font-size: 3.5rem; display: block; opacity: .35; margin-bottom: 12px; }
+.he-text { font-family: 'Pretendard', sans-serif; font-size: 1.05rem; color: var(--dim); margin-bottom: 6px; }
+.he-hint { font-size: .78rem; color: rgba(240,234,255,.2); }
+
+/* =========== SETTINGS PAGE =========== */
+.set-wrap { max-width: 480px; margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + 20px) 16px 16px; }
+.set-title { font-family: 'Pretendard', sans-serif; font-size: 1.6rem; margin-bottom: 3px; }
+.set-sub { font-size: .75rem; color: var(--dim); margin-bottom: 20px; }
+
+.set-card { background: var(--card); border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px; padding: 14px 16px; margin-bottom: 12px; }
+.sc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.sc-title { font-family: 'Pretendard', sans-serif; font-size: .9rem; color: rgba(240,234,255,.65); }
+.sc-desc { font-size: .7rem; color: var(--dim); margin-top: 2px; }
+
+.set-row { display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+.set-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+.set-row:first-of-type { padding-top: 0; }
+.sr-info { flex: 1; }
+.sr-label { font-size: .87rem; font-weight: 700; }
+.sr-hint { font-size: .7rem; color: var(--dim); margin-top: 2px; }
+
+.tog { position: relative; width: 42px; height: 23px; flex-shrink: 0; }
+.tog input { opacity: 0; width: 0; height: 0; }
+.tog-sl { position: absolute; inset: 0; background: rgba(255,255,255,.1); border-radius: 23px; cursor: pointer; transition: .2s; }
+.tog-sl::before { content:''; position: absolute; width: 17px; height: 17px;
+  left: 3px; top: 3px; background: rgba(240,234,255,.55); border-radius: 50%; transition: .2s; }
+.tog input:checked + .tog-sl { background: rgba(255,157,226,.32); }
+.tog input:checked + .tog-sl::before { transform: translateX(19px); background: var(--pink); }
+
+/* BUDGET PREF */
+.mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 6px; }
+.mg-opt { display: flex; align-items: center; gap: 7px; background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08); border-radius: 11px; padding: 9px 11px;
+  cursor: pointer; transition: all .15s; -webkit-user-select: none; user-select: none; }
+.mg-opt.sel { background: rgba(255,157,226,.1); border-color: rgba(255,157,226,.3); }
+.mg-e { font-size: 1.1rem; }
+.mg-l { font-size: .82rem; font-weight: 700; color: rgba(240,234,255,.6); }
+.mg-opt.sel .mg-l { color: var(--pink); }
+
+/* MENU LIST */
+.menu-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.mi { display: flex; align-items: center; gap: 9px; background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07); border-radius: 12px; padding: 10px 12px;
+  transition: all .15s; }
+.mi.off { opacity: .38; }
+.mi-emoji { font-size: 1.3rem; width: 32px; text-align: center; flex-shrink: 0; }
+.mi-info { flex: 1; min-width: 0; }
+.mi-name { font-size: .87rem; font-weight: 700; }
+.mi-tags { font-size: .68rem; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+.mi-actions { display: flex; gap: 5px; flex-shrink: 0; }
+.mi-tog { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 7px; padding: 4px 9px; font-size: .68rem; color: var(--dim); cursor: pointer; transition: all .15s; }
+.mi-tog.on { background: rgba(255,157,226,.1); border-color: rgba(255,157,226,.25); color: var(--pink); }
+.mi-edit { background: transparent; border: 1px solid rgba(100,180,255,.2); border-radius: 7px;
+  width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+  color: rgba(100,180,255,.5); cursor: pointer; font-size: .78rem; }
+.mi-edit:active { background: rgba(100,180,255,.1); color: #85e0ff; }
+.mi-del { background: transparent; border: 1px solid rgba(255,80,80,.18); border-radius: 7px;
+  width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,100,100,.4); cursor: pointer; font-size: .78rem; }
+.mi-del:active { background: rgba(255,80,80,.1); color: #ff6464; }
+
+/* ADD / EDIT FORM */
+.add-form { background: rgba(255,255,255,.03); border: 1px dashed rgba(255,255,255,.13);
+  border-radius: 13px; padding: 13px; margin-top: 6px; }
+.af-title { font-size: .78rem; font-weight: 700; color: var(--dim); margin-bottom: 10px; }
+.af-row { display: flex; gap: 7px; margin-bottom: 8px; flex-wrap: wrap; }
+.fi { flex: 1; min-width: 70px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 9px; padding: 9px 11px; color: #f0eaff !important; font-family: 'Pretendard', sans-serif;
+  font-size: .84rem; outline: none; transition: border .2s; -webkit-appearance: none;
+  -webkit-text-fill-color: #f0eaff !important; }
+.fi option { background: #1a1530 !important; color: #f0eaff !important; }
+.fi::placeholder { color: var(--dim); }
+.fi:focus { border-color: rgba(255,157,226,.4); }
+.fi.fe { width: 54px; min-width: 54px; flex: none; text-align: center; font-size: 1.1rem; }
+.fi.fw { width: 100%; flex: none; }
+.add-action-row { display: flex; gap: 7px; margin-bottom: 0; }
+.ab { background: linear-gradient(135deg,rgba(255,157,226,.2),rgba(255,206,133,.2));
+  border: 1px solid rgba(255,157,226,.28); border-radius: 9px; padding: 9px 14px;
+  color: var(--pink); font-family: 'Pretendard', sans-serif; font-size: .84rem; font-weight: 700;
+  cursor: pointer; white-space: nowrap; flex: 1; }
+.ab:active { filter: brightness(1.1); }
+.ab.cancel { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.1); color: var(--sub); }
+
+.cnt-badge { background: rgba(255,157,226,.13); border-radius: 20px; padding: 3px 9px;
+  font-size: .72rem; color: var(--pink); font-weight: 700; }
+
+/* SAVE BAR */
+.save-bar { position: fixed; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 10px);
+  left: 50%; transform: translateX(-50%); background: rgba(18,13,32,.96);
+  border: 1px solid var(--border); border-radius: 14px; padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px; backdrop-filter: blur(14px);
+  z-index: 300; opacity: 0; pointer-events: none; transition: opacity .2s;
+  white-space: nowrap; }
+.save-bar.show { opacity: 1; pointer-events: auto; }
+.sb-txt { font-size: .78rem; color: var(--sub); }
+.sb-btn { background: linear-gradient(135deg,var(--pink),var(--gold)); border: none;
+  border-radius: 9px; padding: 7px 16px; font-family: 'Pretendard', sans-serif;
+  font-size: .84rem; color: #1a0a2e; cursor: pointer; }
+
+/* MODAL */
+.modal-ov { position: fixed; inset: 0; background: rgba(0,0,0,.65); z-index: 400;
+  display: none; align-items: flex-end; justify-content: center;
+  padding: 0 0 calc(var(--nav-h) + env(safe-area-inset-bottom)) 0; }
+.modal-ov.open { display: flex; }
+.modal-box { background: #14102a !important; border: 1px solid rgba(255,255,255,.12); border-radius: 20px 20px 0 0;
+  padding: 20px 18px calc(20px + env(safe-area-inset-bottom)); width: 100%;
+  max-width: 480px; animation: slideUp .25s ease; }
+@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.mb-title { font-family: 'Pretendard', sans-serif; font-size: 1.15rem; margin-bottom: 3px; }
+.mb-sub { font-size: .78rem; color: var(--sub); margin-bottom: 14px; }
+.mb-ta { width: 100%; background: rgba(255,255,255,.07) !important; border: 1px solid rgba(255,255,255,.1);
+  border-radius: 11px; padding: 10px 13px; color: #f0eaff !important; font-family: 'Pretendard', sans-serif;
+  font-size: .87rem; outline: none; resize: none; margin-bottom: 12px; -webkit-appearance: none;
+  -webkit-text-fill-color: #f0eaff !important; }
+.mb-ta:focus { border-color: rgba(255,157,226,.4); }
+.mb-btns { display: flex; gap: 8px; }
+.mb-ok { flex: 1; background: linear-gradient(135deg,var(--pink),var(--gold)); border: none;
+  border-radius: 11px; padding: 13px; font-family: 'Pretendard', sans-serif; font-size: 1rem; color: #1a0a2e; cursor: pointer; }
+.mb-cancel { flex: 1; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 11px; padding: 13px; font-family: 'Pretendard', sans-serif; font-size: 1rem; color: var(--sub); cursor: pointer; }
+
+/* EDIT MENU MODAL */
+.edit-modal-ov { position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 450;
+  display: none; align-items: flex-end; }
+.edit-modal-ov.open { display: flex; }
+.edit-modal-box { background: #14102a !important; border: 1px solid rgba(255,255,255,.12);
+  border-radius: 20px 20px 0 0; padding: 20px 18px calc(20px + env(safe-area-inset-bottom));
+  width: 100%; max-width: 480px; margin: 0 auto; animation: slideUp .25s ease;
+  max-height: 85vh; overflow-y: auto; }
+.em-title { font-family: 'Pretendard', sans-serif; font-size: 1.15rem; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px; }
+.em-close { background: rgba(255,255,255,.08); border: none; border-radius: 8px;
+  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+  color: var(--sub); cursor: pointer; margin-left: auto; font-size: 1rem; }
+
+/* TOAST */
+.toast { position: fixed; top: calc(env(safe-area-inset-top) + 16px); left: 50%;
+  transform: translateX(-50%) translateY(-6px); background: rgba(22,16,42,.96);
+  border: 1px solid rgba(255,157,226,.3); border-radius: 11px; padding: 9px 18px;
+  font-size: .82rem; color: var(--pink); backdrop-filter: blur(12px);
+  z-index: 500; opacity: 0; transition: all .22s; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div class="stars"></div>
+
+<!-- LOGO BAR -->
+<div class="logo-bar">
+  <div class="logo-text">2PMK</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- NOTE MODAL (bottom sheet) -->
+<div class="modal-ov" id="note-modal">
+  <div class="modal-box">
+    <p class="mb-title" id="modal-menu-title"></p>
+    <p class="mb-sub">한 마디 남기고 싶으면 적어봐요 (선택)</p>
+    <textarea class="mb-ta" id="modal-note" rows="3" placeholder="예: 반반무마니로 시켰는데 맛있었음 😋"></textarea>
+    <div class="mb-btns">
+      <button class="mb-cancel" onclick="closeNoteModal()">취소</button>
+      <button class="mb-ok" onclick="confirmEat()">기록할게! ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MENU MODAL -->
+<div class="edit-modal-ov" id="edit-modal">
+  <div class="edit-modal-box">
+    <div class="em-title">
+      <span id="edit-modal-title">메뉴 수정</span>
+      <button class="em-close" onclick="closeEditModal()">✕</button>
+    </div>
+    <div class="af-row">
+      <input class="fi fe" id="edit-emoji" placeholder="🍔" maxlength="2">
+      <input class="fi" id="edit-name" placeholder="메뉴 이름">
+    </div>
+    <div class="af-row">
+      <input class="fi fw" id="edit-desc" placeholder="한 줄 설명">
+    </div>
+    <div class="af-row">
+      <input class="fi fw" id="edit-tags" placeholder="태그 (쉼표 구분: 매운맛,든든함)">
+    </div>
+    <div class="af-row" style="margin-bottom:14px;">
+      <select class="fi" id="edit-mood" style="flex:1;">
+        <option value="any">🤷 아무 때나</option>
+        <option value="spicy">🌶️ 매운맛</option>
+        <option value="sweet">🍬 달달함</option>
+        <option value="meat">🥩 고기류</option>
+        <option value="simple">🥡 간단하게</option>
+      </select>
+      <select class="fi" id="edit-temp" style="flex:1;">
+        <option value="any">🌡️ 온도 무관</option>
+        <option value="hot">🔥 따뜻함</option>
+        <option value="cold">❄️ 차가움</option>
+      </select>
+    </div>
+    <div class="add-action-row">
+      <button class="ab cancel" onclick="closeEditModal()">취소</button>
+      <button class="ab" onclick="saveMenuEdit()">저장하기 ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- LADDER MODAL -->
+<div class="edit-modal-ov" id="ladder-modal">
+  <div class="edit-modal-box" style="max-height:90vh;">
+    <div class="em-title">
+      <span>🪜 사다리타기</span>
+      <button class="em-close" onclick="closeLadder()">✕</button>
+    </div>
+    <div id="ladder-setup" style="display:block;">
+      <p style="font-size:.78rem;color:var(--sub);margin-bottom:12px;">현재 추천 메뉴 포함 후보를 입력하세요 (2~4개)</p>
+      <div id="ladder-inputs" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
+      <button onclick="addLadderItem()" style="width:100%;background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.15);border-radius:10px;padding:9px;color:var(--sub);font-family:'Pretendard',sans-serif;font-size:.82rem;cursor:pointer;margin-bottom:14px;">+ 후보 추가</button>
+      <div class="add-action-row">
+        <button class="ab cancel" onclick="closeLadder()">취소</button>
+        <button class="ab" onclick="startLadder()">사다리 타기</button>
+      </div>
+    </div>
+    <div id="ladder-game" style="display:none;">
+      <canvas id="ladder-canvas" style="width:100%;border-radius:12px;display:block;"></canvas>
+      <p id="ladder-result-text" style="text-align:center;font-size:1.1rem;font-weight:700;color:var(--text);margin:14px 0 4px;display:none;"></p>
+      <p id="ladder-result-sub" style="text-align:center;font-size:.78rem;color:var(--sub);margin-bottom:14px;display:none;"></p>
+      <div class="add-action-row" id="ladder-done-btns" style="display:none;">
+        <button class="ab cancel" onclick="closeLadder()">닫기</button>
+        <button class="ab" onclick="confirmLadderResult()">이걸로 먹자!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GAME PAGE ===== -->
+<div class="page active" id="page-game">
+  <div class="game-wrap">
+    <div class="game-header">
+      <p class="game-title">🍽️ 오늘 뭐먹지?</p>
+      <p class="game-sub">지금 당장 먹고 싶은 걸 찾아드려요</p>
+    </div>
+    <div class="card">
+      <!-- 추천 버튼 -->
+      <div id="pick-section">
+        <div style="text-align:center;padding:10px 0 18px;">
+          <div id="idle-emoji" style="font-size:3.5rem;margin-bottom:10px;opacity:.5;">🍽️</div>
+          <p style="font-family:'Pretendard',sans-serif;font-size:1.1rem;color:var(--sub);margin-bottom:4px;">오늘 뭐 먹을까요?</p>
+          <p style="font-size:.76rem;color:var(--dim);">버튼을 누르면 바로 추천해드려요</p>
+        </div>
+        <button class="gen-btn" style="font-size:1.15rem;padding:16px;margin-bottom:10px;border-radius:16px;" onclick="pickRandom()">오늘 뭐 먹지? 골라줘</button>
+        <div class="roulette-wrap" id="roulette-wrap" style="display:none;">
+          <div class="spin-ring" id="spin-emoji">🍜</div>
+          <p class="spin-name" id="spin-name"></p>
+        </div>
+      </div>
+      <div class="result-area" id="result-area" style="display:none;">
+        <span class="res-emoji" id="res-emoji"></span>
+        <p class="res-name" id="res-name"></p>
+        <p class="res-desc" id="res-desc"></p>
+        <div class="res-tags" id="res-tags"></div>
+        <button class="eat-btn" id="eat-btn" onclick="openNoteModal()">바로 먹자!</button>
+        <button class="again-btn" onclick="restart()" style="margin-top:8px;">다른 거 볼래</button>
+        <button class="ladder-btn" onclick="openLadder()" style="margin-top:8px;">못 고르겠어, 사다리 타자</button>
+        <p class="tip" id="tip">맛있게 드세요 🌙</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HISTORY PAGE ===== -->
+<div class="page" id="page-history">
+  <div class="hist-wrap">
+    <div class="hist-top">
+      <p class="hist-title">📅 기록장</p>
+      <p class="hist-sub">메뉴와 로또 번호를 한곳에서</p>
+    </div>
+    <div style="display:flex;gap:6px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:14px;padding:5px;margin-bottom:18px;">
+      <button class="mode-tab active" id="htab-food" onclick="setHistTab('food',this)" style="flex:1;">🍽️<br>메뉴 기록</button>
+      <button class="mode-tab"        id="htab-lotto" onclick="setHistTab('lotto',this)" style="flex:1;">🎱<br>로또 번호</button>
+    </div>
+    <div id="hist-body"></div>
+    <div id="hist-lotto-body" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- ===== LOTTO PAGE ===== -->
+<div class="page" id="page-lotto">
+  <div class="lotto-wrap">
+    <div class="lotto-header">
+      <p class="lotto-title">🎱 로또 번호 추출기</p>
+      <p class="lotto-sub">행운의 번호를 뽑아보세요</p>
+    </div>
+    <!-- MODE TABS -->
+    <div class="mode-tabs">
+      <button class="mode-tab active" onclick="setLottoMode('basic',this)">🎲<br>순수<br>랜덤</button>
+      <button class="mode-tab" onclick="setLottoMode('balanced',this)">⚖️<br>균형<br>조건</button>
+      <button class="mode-tab" onclick="setLottoMode('smart',this)">🧠<br>패턴<br>회피</button>
+    </div>
+    <!-- MODE DESC -->
+    <div class="mode-desc" id="lotto-mode-desc"></div>
+    <!-- BALL STAGE -->
+    <div class="ball-stage" id="ball-stage">
+      <div class="ball-placeholder" id="ball-placeholder">
+        <div class="ball-ph"></div><div class="ball-ph"></div><div class="ball-ph"></div>
+        <div class="ball-ph"></div><div class="ball-ph"></div><div class="ball-ph"></div>
+      </div>
+      <div class="analysis-row" id="analysis-row" style="display:none;"></div>
+    </div>
+    <!-- BUTTONS -->
+    <button class="gen-btn" onclick="generateSingle()">🎱 번호 추출하기</button>
+    <button class="gen-multi-btn" onclick="generateMulti()">📋 5세트 한꺼번에 뽑기</button>
+    <!-- MULTI SETS -->
+    <div class="multi-sets" id="multi-sets" style="display:none;"></div>
+    <!-- SAVE BTN -->
+    <button class="lotto-save-btn" id="lotto-save-btn" style="display:none;" onclick="saveLottoNumbers()">📌 이 번호 저장하기</button>
+    <!-- HISTORY -->
+    <div class="lt-divider"></div>
+    <div class="lh-section">
+      <p class="lh-title">📂 저장된 번호</p>
+      <div class="lh-list" id="lh-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bot-nav">
+  <button class="bot-nav-btn active" id="nav-game" onclick="goPage('game',this)">
+    <span class="nav-icon">🍽️</span>추천
+  </button>
+  <button class="bot-nav-btn" id="nav-lotto" onclick="goPage('lotto',this)">
+    <span class="nav-icon">🎱</span>로또
+  </button>
+  <button class="bot-nav-btn" id="nav-history" onclick="goPage('history',this)">
+    <span class="nav-icon">📅</span>기록
+  </button>
+</nav>
+
+
+<script>
+// ============ DEFAULT DATA ============
+const DEFAULT_MENUS = [
+  {id:1,  name:"치킨",          emoji:"🍗", desc:"바삭한 황금빛 치킨! 야식의 영원한 왕.",              tags:["국민야식","맥주안주","배달가능"], mood:"meat", temp:"hot",  enabled:true, custom:false},
+  {id:2,  name:"피자",          emoji:"🍕", desc:"쭉 늘어나는 치즈의 유혹. 혼자도 여럿도 정답.",        tags:["여럿이","배달가능","든든함"],     mood:"sweet",temp:"hot",  enabled:true, custom:false},
+  {id:3,  name:"짜장면",        emoji:"🍜", desc:"달콤 짭짤한 춘장 소스. 중식 배달의 클래식.",          tags:["중식","빠름","혼자야식"],         mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:4,  name:"짬뽕",          emoji:"🍲", desc:"칼칼한 국물이 속을 확 풀어주는 중식 소울푸드.",        tags:["중식","매운맛","국물"],           mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:5,  name:"탕수육",        emoji:"🥩", desc:"바삭한 튀김에 새콤달콤 소스. 부먹vs찍먹 선택의 시간.", tags:["중식","튀김","여럿이"],           mood:"sweet", temp:"hot",  enabled:true, custom:false},
+  {id:6,  name:"떡볶이",        emoji:"🌶️", desc:"매콤달콤한 국민 간식. 포장마차 감성 한 입.",          tags:["분식","매운맛","저렴"],           mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:7,  name:"순대",          emoji:"🌭", desc:"쫄깃하고 고소한 순대. 떡볶이 국물에 찍으면 완벽.",    tags:["분식","저렴","포장마차"],         mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:8,  name:"튀김",          emoji:"🍤", desc:"바삭바삭 고소한 튀김 한 봉지. 간식의 정석.",          tags:["분식","저렴","간식"],             mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:10, name:"김밥",          emoji:"🍱", desc:"한 줄 김밥의 소박한 행복. 든든하고 깔끔하게.",        tags:["분식","저렴","혼자야식"],         mood:"simple",temp:"any",  enabled:true, custom:false},
+  {id:11, name:"족발",          emoji:"🦵", desc:"쫄깃쫄깃 족발 한 접시. 소주 한 잔 곁들이면 천국.",   tags:["안주용","여럿이","든든함"],       mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:12, name:"보쌈",          emoji:"🥬", desc:"수육에 김치, 굴, 쌈장까지. 입안에서 퍼지는 조화.",    tags:["안주용","여럿이","든든함"],       mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:13, name:"삼겹살",        emoji:"🥓", desc:"불판 위에서 지글지글. 상추쌈에 된장 한 숟갈.",        tags:["고기","여럿이","소주메이트"],     mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:14, name:"곱창",          emoji:"🍢", desc:"불 향 가득한 곱창 한 접시. 야식 고수들의 선택.",      tags:["안주용","특별한야식","불맛"],     mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:15, name:"마라탕",        emoji:"🫕", desc:"얼얼하고 중독적인 마라 향. 한 번 빠지면 못 나온다.",  tags:["중식","매운맛","중독주의"],       mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:16, name:"마라샹궈",      emoji:"🍳", desc:"볶음 마라의 진수. 재료를 골라서 내 입맛대로.",        tags:["중식","매운맛","든든함"],         mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:17, name:"쌀국수",        emoji:"🍜", desc:"고소하고 깔끔한 쌀국수 한 그릇. 국물이 진짜.",        tags:["동남아","국물","가볍게"],         mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:19, name:"초밥",          emoji:"🍣", desc:"입안에서 녹는 신선한 초밥. 오늘은 좀 고급지게.",      tags:["일식","고급","혼자야식"],         mood:"sweet", temp:"cold", enabled:true, custom:false},
+  {id:20, name:"회/사시미",     emoji:"🐟", desc:"싱싱한 회 한 접시. 소주와의 조합은 말할 필요도 없다.",tags:["일식","안주용","고급"],           mood:"simple",temp:"cold", enabled:true, custom:false},
+  {id:21, name:"라멘",          emoji:"🍜", desc:"진한 돈코츠 국물의 일본식 라멘. 야식 프리미엄.",      tags:["일식","국물","든든함"],           mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:22, name:"돈까스",        emoji:"🍱", desc:"바삭한 돈까스에 소스 듬뿍. 고기 한 판의 행복.",       tags:["일식","든든함","혼자야식"],       mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:23, name:"햄버거",        emoji:"🍔", desc:"두툼한 패티에 소스가 뚝뚝. 패스트푸드의 제왕.",       tags:["패스트푸드","배달가능","든든함"], mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:24, name:"샌드위치",      emoji:"🥪", desc:"가볍고 든든한 샌드위치. 건강한 야식이 필요할 때.",    tags:["가볍게","혼자야식","빠름"],       mood:"simple",temp:"cold", enabled:true, custom:false},
+  {id:25, name:"타코",          emoji:"🌮", desc:"또르티야에 고기와 살사. 멕시칸 감성으로 기분 전환.",   tags:["멕시칸","퓨전","특별한야식"],     mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:26, name:"부리또",        emoji:"🌯", desc:"꽉 채운 속재료의 포만감. 한 손에 쏙 들어오는 야식.",   tags:["멕시칸","든든함","혼자야식"],     mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:27, name:"찜닭",          emoji:"🍗", desc:"간장 양념에 촉촉하게 쪄낸 닭. 당면까지 있으면 완벽.", tags:["한식","든든함","여럿이"],         mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:28, name:"닭발",          emoji:"🦶", desc:"맵고 쫄깃한 닭발. 매운맛 마니아를 위한 극강 선택.",   tags:["매운맛","안주용","자극적"],       mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:29, name:"불닭",          emoji:"🔥", desc:"불같이 매운 불닭. 땀 뻘뻘 흘리며 먹는 쾌감.",         tags:["매운맛","자극적","혼자야식"],     mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:30, name:"갈비찜",        emoji:"🍖", desc:"부드럽게 익은 갈비에 달콤한 양념. 집밥 같은 포근함.",  tags:["한식","든든함","여럿이"],         mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:31, name:"순대국밥",      emoji:"🍲", desc:"뜨끈한 국물에 속이 확 풀리는 국밥. 해장도 되는 메뉴.",tags:["한식","국물","든든함"],           mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:32, name:"설렁탕",        emoji:"🍲", desc:"뽀얀 사골 국물의 정석. 밥 말아 한 그릇이면 천하태평.",tags:["한식","국물","든든함"],           mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:33, name:"부대찌개",      emoji:"🥘", desc:"햄, 소시지, 라면이 모인 용광로 찌개. 여럿이 먹어야 제맛.",tags:["한식","매운맛","여럿이"],     mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:34, name:"김치찌개",      emoji:"🥘", desc:"칼칼한 김치찌개 한 그릇. 돼지고기 듬뿍이면 금상첨화.",tags:["한식","매운맛","든든함"],         mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:35, name:"된장찌개",      emoji:"🥘", desc:"구수한 된장 향이 퍼지는 집밥 느낌. 뚝배기째로.",     tags:["한식","국물","혼자야식"],         mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:36, name:"해물파전",      emoji:"🥞", desc:"바삭하고 쫄깃한 해물파전. 막걸리 한 잔 곁들이면 완벽.",tags:["한식","안주용","비오는날"],      mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:37, name:"감자전",        emoji:"🥞", desc:"노릇노릇 바삭한 감자전. 간단하지만 의외로 중독성 있음.",tags:["한식","저렴","간식"],           mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:38, name:"편의점 도시락", emoji:"🍱", desc:"가성비 최강 편의점 픽. 빠르고 저렴하게 해결.",        tags:["간단","저렴","혼자야식"],         mood:"simple",temp:"any",  enabled:true, custom:false},
+  {id:40, name:"냉면",          emoji:"🫙", desc:"새콤하고 시원한 냉면 한 그릇. 더운 날 최고의 선택.",  tags:["한식","시원함","여름야식"],       mood:"simple",temp:"cold", enabled:true, custom:false},
+  {id:42, name:"비빔냉면",      emoji:"🌶️", desc:"매콤 새콤달콤 비빔냉면. 쭉쭉 들어가는 면발.",        tags:["한식","매운맛","여름야식"],       mood:"spicy", temp:"cold", enabled:true, custom:false},
+  {id:47, name:"닭강정",        emoji:"🍗", desc:"달콤매콤 바삭한 닭강정. 치킨이 질릴 때 찾게 되는 맛.",tags:["치킨류","달달함","배달가능"],     mood:"sweet", temp:"hot",  enabled:true, custom:false},
+  {id:48, name:"양념치킨",      emoji:"🍗", desc:"빨간 양념 가득한 달콤매콤 치킨. 밥이랑 먹으면 두 그릇.",tags:["치킨류","달달함","국민야식"],   mood:"sweet", temp:"hot",  enabled:true, custom:false},
+  {id:49, name:"후라이드치킨",  emoji:"🍗", desc:"고소한 튀김향 가득 후라이드. 맥주 한 캔과 환상궁합.",  tags:["치킨류","안주용","국민야식"],     mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:50, name:"쫄면",          emoji:"🌶️", desc:"쫄깃하고 매콤한 쫄면 한 그릇. 분식의 숨겨진 강자.",  tags:["분식","매운맛","저렴"],           mood:"spicy", temp:"cold", enabled:true, custom:false},
+  {id:51, name:"갈비탕",        emoji:"🍖", desc:"진하고 깊은 갈비 국물 한 그릇. 뼈까지 발라먹는 행복.", tags:["한식","국물","든든함"],           mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:52, name:"케밥",          emoji:"🥙", desc:"육즙 가득 고기에 채소와 소스. 이국적인 한 끼.",        tags:["퓨전","든든함","특별한야식"],     mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:53, name:"등뼈찜",        emoji:"🦴", desc:"푹 고아낸 등뼈에 감자까지. 뼈 발라먹는 재미가 있는 메뉴.",tags:["한식","든든함","여럿이"],      mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:54, name:"화채",          emoji:"🍹", desc:"달콤하고 시원한 화채 한 그릇. 더운 날 입가심으로 딱.", tags:["한식","시원함","달달함"],         mood:"sweet", temp:"cold", enabled:true, custom:false},
+];
+const DEFAULT_SETTINGS={showRunnerUp:false,showRndBtn:true,excludeDisabled:true,budgetPref:"any"};
+
+let menus=[], settings={}, history=[], isDirty=false, nextId=100;
+let currentResultMenu=null, editingMenuId=null;
+
+function loadState(){
+  try{
+    const sm=localStorage.getItem("ys_menus"),ss=localStorage.getItem("ys_settings"),sh=localStorage.getItem("ys_history");
+    menus=sm?JSON.parse(sm):JSON.parse(JSON.stringify(DEFAULT_MENUS));
+    settings=ss?JSON.parse(ss):{...DEFAULT_SETTINGS};
+    history=sh?JSON.parse(sh):[];
+    nextId=Math.max(...menus.map(m=>m.id),99)+1;
+  }catch(e){menus=JSON.parse(JSON.stringify(DEFAULT_MENUS));settings={...DEFAULT_SETTINGS};history=[];}
+}
+function saveState(){
+  localStorage.setItem("ys_menus",JSON.stringify(menus));
+  localStorage.setItem("ys_settings",JSON.stringify(settings));
+  localStorage.setItem("ys_history",JSON.stringify(history));
+}
+
+// ============ NAV ============
+function goPage(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.bot-nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  (btn||document.getElementById('nav-'+name)).classList.add('active');
+  if(name==='history') { currentHistTab='food'; setHistTabUI('food'); renderHistory(); }
+  if(name==='lotto') initLottoPage();
+  window.scrollTo(0,0);
+}
+
+// ============ NOTE MODAL ============
+function openNoteModal(){
+  if(!currentResultMenu) return;
+  document.getElementById('modal-menu-title').textContent=currentResultMenu.emoji+' '+currentResultMenu.name;
+  document.getElementById('modal-note').value='';
+  document.getElementById('note-modal').classList.add('open');
+}
+function closeNoteModal(){ document.getElementById('note-modal').classList.remove('open'); }
+function confirmEat(){
+  const note=document.getElementById('modal-note').value.trim();
+  const now=new Date();
+  history.unshift({id:Date.now(),menuId:currentResultMenu.id,name:currentResultMenu.name,
+    emoji:currentResultMenu.emoji,note,ts:now.getTime(),
+    dateStr:fmtDate(now),timeStr:fmtTime(now)});
+  saveState(); closeNoteModal();
+  const eb=document.getElementById('eat-btn');
+  eb.textContent='✓ 냠냠 기록됐어요!'; eb.classList.add('eaten'); eb.disabled=true;
+  document.getElementById('tip').textContent='기록 탭에서 메뉴 히스토리를 확인해봐요 📅';
+  showToast('메뉴 기록 완료! '+currentResultMenu.emoji);
+}
+function fmtDate(d){const dy=['일','월','화','수','목','금','토'];return`${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${dy[d.getDay()]})`;}
+function fmtTime(d){const h=d.getHours(),m=d.getMinutes(),ap=h<12?'오전':'오후',hh=h%12||12;return`${ap} ${hh}:${String(m).padStart(2,'0')}`;}
+function fmtMK(ts){const d=new Date(ts);return`${d.getFullYear()}년 ${d.getMonth()+1}월`;}
+
+// ============ EDIT MENU MODAL ============
+function openEditModal(id){
+  const m=menus.find(m=>m.id===id); if(!m) return;
+  editingMenuId=id;
+  document.getElementById('edit-modal-title').textContent='✏️ '+m.name+' 수정';
+  document.getElementById('edit-emoji').value=m.emoji;
+  document.getElementById('edit-name').value=m.name;
+  document.getElementById('edit-desc').value=m.desc;
+  document.getElementById('edit-tags').value=m.tags.join(', ');
+  document.getElementById('edit-mood').value=m.mood;
+  document.getElementById('edit-temp').value=m.temp;
+  document.getElementById('edit-modal').classList.add('open');
+}
+function closeEditModal(){ document.getElementById('edit-modal').classList.remove('open'); editingMenuId=null; }
+function saveMenuEdit(){
+  const m=menus.find(m=>m.id===editingMenuId); if(!m) return;
+  const name=document.getElementById('edit-name').value.trim();
+  if(!name){showToast('이름을 입력해주세요!');return;}
+  m.emoji=document.getElementById('edit-emoji').value.trim()||m.emoji;
+  m.name=name;
+  m.desc=document.getElementById('edit-desc').value.trim()||m.desc;
+  const tr=document.getElementById('edit-tags').value.trim();
+  m.tags=tr?tr.split(',').map(t=>t.trim()).filter(Boolean):m.tags;
+  m.mood=document.getElementById('edit-mood').value;
+  m.temp=document.getElementById('edit-temp').value;
+  saveState(); closeEditModal(); renderMenuList(); updateMenuCnt();
+  showToast(`'${name}' 수정 완료! ✓`);
+}
+
+// ============ HISTORY ============
+
+// ============ HISTORY TABS ============
+let currentHistTab = 'food';
+
+function setHistTab(tab, btn) {
+  currentHistTab = tab;
+  setHistTabUI(tab);
+  if (tab === 'food') {
+    document.getElementById('hist-body').style.display = 'block';
+    document.getElementById('hist-lotto-body').style.display = 'none';
+    renderHistory();
+  } else {
+    document.getElementById('hist-body').style.display = 'none';
+    document.getElementById('hist-lotto-body').style.display = 'block';
+    renderLottoHistoryInRecord();
+  }
+}
+
+function setHistTabUI(tab) {
+  const foodBtn = document.getElementById('htab-food');
+  const lottoBtn = document.getElementById('htab-lotto');
+  if (!foodBtn || !lottoBtn) return;
+  foodBtn.classList.toggle('active', tab === 'food');
+  lottoBtn.classList.toggle('active', tab === 'lotto');
+}
+
+function ballColorInline(n) {
+  if (n<=10) return 'linear-gradient(145deg,#f5d76e,#e8a000)';
+  if (n<=20) return 'linear-gradient(145deg,#6ea8f5,#2563d4)';
+  if (n<=30) return 'linear-gradient(145deg,#f08080,#c0392b)';
+  if (n<=40) return 'linear-gradient(145deg,#7be8a0,#1a9c47)';
+  return 'linear-gradient(145deg,#b0b0c8,#606080)';
+}
+
+function renderLottoHistoryInRecord() {
+  const el = document.getElementById('hist-lotto-body');
+  if (!lottoHistory || lottoHistory.length === 0) {
+    el.innerHTML = `<div class="hist-empty">
+      <span class="he-emoji">🎱</span>
+      <p class="he-text">저장된 로또 번호가 없어요</p>
+      <p class="he-hint">로또 탭에서 번호를 뽑고 저장해보세요</p>
+    </div>`;
+    return;
+  }
+
+  const modeLabel = {basic:'순수 랜덤', balanced:'균형 조건', smart:'패턴 회피'};
+  const modeColor = {basic:'rgba(133,224,255,.15)', balanced:'rgba(123,232,160,.12)', smart:'rgba(255,157,226,.12)'};
+  const modeBorder = {basic:'rgba(133,224,255,.25)', balanced:'rgba(123,232,160,.25)', smart:'rgba(255,157,226,.25)'};
+  const modeTextColor = {basic:'#85e0ff', balanced:'#7be8a0', smart:'#ff9de2'};
+
+  // stats
+  const total = lottoHistory.reduce((s,e)=>s+e.nums.length, 0);
+  const modeCount = {};
+  lottoHistory.forEach(e=>{ modeCount[e.mode]=(modeCount[e.mode]||0)+1; });
+  const topMode = Object.entries(modeCount).sort((a,b)=>b[1]-a[1])[0];
+
+  let html = `<div class="stat-row" style="margin-bottom:18px;">
+    <div class="stat-card"><p class="stat-num">${lottoHistory.length}</p><p class="stat-lbl">저장 횟수</p></div>
+    <div class="stat-card"><p class="stat-num">${total}</p><p class="stat-lbl">총 세트</p></div>
+    ${topMode ? `<div class="stat-card"><p class="stat-num" style="font-size:.9rem;line-height:1.2;">${modeLabel[topMode[0]]||topMode[0]}</p><p class="stat-lbl">자주 쓴 모드</p></div>` : ''}
+  </div>`;
+
+  // group by month
+  const monthGroups = {};
+  lottoHistory.forEach(e => {
+    const mk = fmtMK(e.ts);
+    if (!monthGroups[mk]) monthGroups[mk] = [];
+    monthGroups[mk].push(e);
+  });
+
+  html += '<div>';
+  Object.entries(monthGroups).forEach(([month, entries]) => {
+    html += `<div class="tl-month">${month}</div>`;
+    entries.forEach(e => {
+      const bg = modeColor[e.mode] || 'rgba(255,255,255,.04)';
+      const bd = modeBorder[e.mode] || 'rgba(255,255,255,.1)';
+      const tc = modeTextColor[e.mode] || 'var(--sub)';
+      html += `<div style="background:${bg};border:1px solid ${bd};border-radius:14px;padding:13px 14px;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div>
+            <span style="font-size:.7rem;font-weight:700;color:${tc};background:${bg};border:1px solid ${bd};border-radius:10px;padding:2px 8px;">${modeLabel[e.mode]||e.mode}</span>
+            <span style="font-size:.65rem;color:var(--dim);margin-left:6px;">${e.dateStr}</span>
+          </div>
+          <button class="lh-del" onclick="delLottoEntryFromRecord(${e.id})" style="width:26px;height:26px;">✕</button>
+        </div>
+        ${e.nums.map((nums, si) => `
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:${si<e.nums.length-1?'8px':'0'};">
+            ${e.nums.length > 1 ? `<span style="font-size:.65rem;color:var(--dim);width:14px;flex-shrink:0;">${['A','B','C','D','E'][si]}</span>` : ''}
+            <div style="display:flex;gap:5px;flex-wrap:wrap;">
+              ${nums.map(n=>`<div style="width:34px;height:34px;border-radius:50%;background:${ballColorInline(n)};display:flex;align-items:center;justify-content:center;font-family:'Pretendard',sans-serif;font-size:.78rem;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.3);">${n}</div>`).join('')}
+            </div>
+            <button onclick="copyNums('${nums.join(', ')}')" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:3px 8px;font-size:.65rem;color:var(--sub);cursor:pointer;flex-shrink:0;margin-left:auto;">복사</button>
+          </div>`).join('')}
+      </div>`;
+    });
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function delLottoEntryFromRecord(id) {
+  lottoHistory = lottoHistory.filter(e => e.id !== id);
+  saveLottoState();
+  renderLottoHistoryInRecord();
+  // 로또탭 히스토리도 갱신
+  if (document.getElementById('page-lotto').classList.contains('active')) {
+    renderLottoHistory();
+  }
+}
+
+function renderHistory(){
+  const body=document.getElementById('hist-body');
+  if(history.length===0){
+    body.innerHTML=`<div class="hist-empty"><p class="he-text">아직 기록이 없어요</p><p class="he-hint">추천 받은 뒤 "이걸로 먹을래!" 버튼을 눌러봐요</p></div>`;
+    return;
+  }
+  // stats
+  const favMap={};
+  history.forEach(e=>{favMap[e.name]=(favMap[e.name]||0)+1;});
+  const favSorted=Object.entries(favMap).sort((a,b)=>b[1]-a[1]);
+  const top=favSorted[0];
+  let html=`<div class="stat-row">
+    <div class="stat-card"><p class="stat-num">${history.length}</p><p class="stat-lbl">총 기록</p></div>
+    <div class="stat-card"><p class="stat-num">${Object.keys(favMap).length}</p><p class="stat-lbl">종류</p></div>
+    ${top?`<div class="stat-card"><p class="stat-num" style="font-size:1.1rem;">${menus.find(m=>m.name===top[0])?.emoji||'🍽️'}</p><p class="stat-lbl">최애</p></div>`:''}
+  </div>`;
+  // favorites scroll
+  html+=`<div class="fav-scroll">`;
+  favSorted.slice(0,8).forEach(([name,cnt],i)=>{
+    const m=menus.find(m=>m.name===name);
+    html+=`<div class="fav-chip ${i===0?'top':''}"><span class="fc-e">${m?.emoji||'🍽️'}</span><span class="fc-n">${name}</span><span class="fc-c">${cnt}회</span></div>`;
+  });
+  html+=`</div>`;
+  // heat (60 days)
+  const hm={};
+  history.forEach(e=>{const d=new Date(e.ts);const k=`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;hm[k]=(hm[k]||0)+1;});
+  html+=`<div class="heat-wrap"><p class="heat-label">🔥 최근 60일 빈도</p><div class="heat-grid">`;
+  const now=new Date();
+  for(let i=59;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);const k=`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;const c=hm[k]||0;html+=`<div class="hc ${c===0?'':c===1?'h1':c===2?'h2':'h3'}" title="${d.getMonth()+1}/${d.getDate()} ${c}회"></div>`;}
+  html+=`</div></div>`;
+  // timeline
+  const mGroups={};
+  history.forEach(e=>{const mk=fmtMK(e.ts);if(!mGroups[mk])mGroups[mk]=[];mGroups[mk].push(e);});
+  html+=`<div>`;
+  Object.entries(mGroups).forEach(([month,entries])=>{
+    html+=`<div class="tl-month">${month}</div>`;
+    const dGroups={};
+    entries.forEach(e=>{if(!dGroups[e.dateStr])dGroups[e.dateStr]=[];dGroups[e.dateStr].push(e);});
+    Object.entries(dGroups).forEach(([day,des])=>{
+      html+=`<div class="tl-day"><div class="tl-day-hd"><div class="tl-dot"></div><span class="tl-day-lbl">${day}</span><span class="tl-day-cnt">${des.length}개</span></div><div class="tl-entries">`;
+      des.forEach(e=>{html+=`<div class="tl-entry" id="te-${e.id}"><div class="te-emoji">${e.emoji}</div><div class="te-body"><p class="te-name">${e.name}</p><p class="te-time">${e.timeStr}</p>${e.note?`<p class="te-note">"${e.note}"</p>`:''}</div><button class="te-del" onclick="delEntry(${e.id})">✕</button></div>`;});
+      html+=`</div></div>`;
+    });
+  });
+  html+=`</div>`;
+  body.innerHTML=html;
+}
+function delEntry(id){
+  history=history.filter(e=>e.id!==id);
+  saveState(); renderHistory();
+}
+
+// ============ SETTINGS ============
+
+
+
+
+
+
+
+
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ============ RANDOM PICK ============
+function getActive() { return settings.excludeDisabled ? menus.filter(m=>m.enabled) : menus; }
+
+function pickRandom() {
+  const active = getActive();
+  if (active.length === 0) { showToast('활성화된 메뉴가 없어요!'); return; }
+
+  // 룰렛 애니메이션
+  document.getElementById('pick-section').style.display = 'block';
+  document.getElementById('result-area').style.display = 'none';
+  document.getElementById('idle-emoji').style.display = 'none';
+  const rw = document.getElementById('roulette-wrap');
+  rw.style.display = 'block';
+  const se = document.getElementById('spin-emoji');
+  const sn = document.getElementById('spin-name');
+  se.style.animation = 'spin .3s linear infinite';
+  sn.textContent = '';
+  sn.style.cssText = '';
+
+  let cnt = 0; const max = 20;
+  if (window._rlv) clearInterval(window._rlv);
+  window._rlv = setInterval(() => {
+    const r = active[Math.floor(Math.random() * active.length)];
+    se.textContent = r.emoji;
+    sn.textContent = r.name;
+    cnt++;
+    if (cnt >= max) {
+      clearInterval(window._rlv);
+      se.style.animation = 'none';
+      const fin = active[Math.floor(Math.random() * active.length)];
+      currentResultMenu = fin;
+      se.textContent = fin.emoji;
+      sn.style.cssText = "font-family:'Pretendard',sans-serif;font-size:1rem;color:#ff9de2;";
+      sn.textContent = fin.name + '!';
+      setTimeout(() => showResult(fin), 400);
+    }
+  }, 90);
+}
+
+function showResult(menu) {
+  document.getElementById('pick-section').style.display = 'none';
+  document.getElementById('roulette-wrap').style.display = 'none';
+  document.getElementById('idle-emoji').style.display = 'block';
+
+  const ra = document.getElementById('result-area');
+  ra.style.display = 'block';
+  ra.style.animation = 'none';
+  void ra.offsetWidth; // reflow
+  ra.style.animation = 'fadeUp .4s ease';
+
+  document.getElementById('res-emoji').textContent = menu.emoji;
+  document.getElementById('res-name').textContent = menu.name;
+  document.getElementById('res-desc').textContent = menu.desc;
+  document.getElementById('res-tags').innerHTML = menu.tags.map(t=>`<span class="tag">#${t}</span>`).join('');
+
+  const eb = document.getElementById('eat-btn');
+  eb.textContent = '🍽️ 이걸로 먹을래!';
+  eb.classList.remove('eaten');
+  eb.disabled = false;
+  document.getElementById('tip').textContent = '맛있게 드세요 🤤';
+}
+
+function restart() {
+  currentResultMenu = null;
+  document.getElementById('result-area').style.display = 'none';
+  document.getElementById('pick-section').style.display = 'block';
+  document.getElementById('roulette-wrap').style.display = 'none';
+  document.getElementById('idle-emoji').style.display = 'block';
+  document.getElementById('idle-emoji').style.opacity = '.5';
+}
+
+let rlv = null;
+
+
+// ============ LOTTO ============
+let lottoMode = 'basic';
+let lastSingleNums = null;
+let lottoHistory = [];
+
+try {
+  const _lh = localStorage.getItem('ys_lotto');
+  lottoHistory = _lh ? JSON.parse(_lh) : [];
+} catch(e) { lottoHistory = []; }
+
+function saveLottoState() {
+  localStorage.setItem('ys_lotto', JSON.stringify(lottoHistory));
+}
+
+const MODE_DESC = {
+  basic:    [{i:'🎲',t:'1~45 중 6개를 완전 무작위로 추출합니다.'},{i:'📊',t:'중복 제거 후 오름차순 정렬합니다.'}],
+  balanced: [{i:'⚖️',t:'홀짝 비율: 3:3 우선, 2:4 / 4:2 허용'},{i:'📦',t:'5개 구간(1~10, 11~20, 21~30, 31~40, 41~45) 골고루 분산'},{i:'🚫',t:'특정 구간 3개 이상 몰림 방지'}],
+  smart:    [{i:'🧠',t:'균형 조건 + 패턴 회피 적용'},{i:'🚫',t:'1~31만 사용 패턴 회피'},{i:'🔗',t:'연속번호 4개 이상 제외'},{i:'🔢',t:'같은 끝자리 3개 이상 제외'},{i:'📐',t:'5,10,15… 등차수열 패턴 제외'}],
+};
+
+function setLottoMode(mode, btn) {
+  lottoMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderModeDesc();
+  resetBallStage();
+}
+
+function resetBallStage() {
+  document.getElementById('ball-placeholder').style.display = 'flex';
+  document.getElementById('analysis-row').style.display = 'none';
+  document.getElementById('analysis-row').innerHTML = '';
+  document.getElementById('multi-sets').style.display = 'none';
+  document.getElementById('multi-sets').innerHTML = '';
+  document.getElementById('lotto-save-btn').style.display = 'none';
+  lastSingleNums = null;
+  const stage = document.getElementById('ball-stage');
+  const existing = stage.querySelector('.balls-row');
+  if (existing) existing.remove();
+}
+
+function renderModeDesc() {
+  const rows = MODE_DESC[lottoMode] || [];
+  document.getElementById('lotto-mode-desc').innerHTML =
+    rows.map(r=>`<div class="md-row"><span class="md-icon">${r.i}</span><span class="md-text">${r.t}</span></div>`).join('');
+}
+
+function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+function basicRandom() {
+  const pool = Array.from({length:45},(_,i)=>i+1);
+  const res = [];
+  while(res.length<6){ const i=randInt(0,pool.length-1); res.push(pool.splice(i,1)[0]); }
+  return res.sort((a,b)=>a-b);
+}
+
+function getZone(n){ return n<=10?0:n<=20?1:n<=30?2:n<=40?3:4; }
+
+function balancedRandom(tries=200){
+  for(let t=0;t<tries;t++){
+    const nums=basicRandom();
+    const odds=nums.filter(n=>n%2!==0).length;
+    if(odds<2||odds>4) continue;
+    const zones=[0,0,0,0,0];
+    nums.forEach(n=>zones[getZone(n)]++);
+    if(zones.some(z=>z>=3)) continue;
+    return nums;
+  }
+  return basicRandom();
+}
+
+function hasLongConsec(nums){ let s=1; for(let i=1;i<nums.length;i++){ if(nums[i]===nums[i-1]+1){s++;if(s>=4)return true;}else s=1;} return false; }
+function hasEndCluster(nums){ const f={}; nums.forEach(n=>{const e=n%10;f[e]=(f[e]||0)+1;}); return Object.values(f).some(v=>v>=3); }
+function isArith(nums){ for(let i=0;i<nums.length-2;i++){ const d=nums[i+1]-nums[i]; if(d<=0||d>10)continue; let c=2; for(let j=i+2;j<nums.length;j++){if(nums[j]===nums[j-1]+d)c++;} if(c>=4)return true;} return false; }
+function hasLowBias(nums){ return nums.every(n=>n<=31); }
+
+function smartRandom(tries=500){
+  for(let t=0;t<tries;t++){
+    const nums=balancedRandom(50);
+    if(!nums)continue;
+    if(hasLongConsec(nums))continue;
+    if(hasEndCluster(nums))continue;
+    if(isArith(nums))continue;
+    if(hasLowBias(nums))continue;
+    return nums;
+  }
+  return balancedRandom(200)||basicRandom();
+}
+
+function generate(mode){
+  if(mode==='basic') return basicRandom();
+  if(mode==='balanced') return balancedRandom();
+  return smartRandom();
+}
+
+function analyzeNums(nums){
+  const tags=[];
+  const odds=nums.filter(n=>n%2!==0).length;
+  tags.push({cls:odds===3?'good':'warn', txt:`홀${odds}:짝${6-odds}`});
+  const zones=[0,0,0,0,0]; nums.forEach(n=>zones[getZone(n)]++);
+  const covered=zones.filter(z=>z>0).length;
+  tags.push({cls:covered>=4?'good':covered>=3?'warn':'bad', txt:`${covered}구간`});
+  if(hasLongConsec(nums)) tags.push({cls:'bad',txt:'연속4+'});
+  else tags.push({cls:'good',txt:'연속없음'});
+  if(hasEndCluster(nums)) tags.push({cls:'bad',txt:'끝수몰림'});
+  else tags.push({cls:'good',txt:'끝수분산'});
+  const high=nums.filter(n=>n>=32).length;
+  tags.push({cls:high>=2?'good':high===1?'warn':'bad', txt:`고번호${high}개`});
+  return tags;
+}
+
+function ballColor(n){ return n<=10?'b1':n<=20?'b2':n<=30?'b3':n<=40?'b4':'b5'; }
+function ballColorInline(n){
+  if(n<=10)return 'linear-gradient(145deg,#f5d76e,#e8a000)';
+  if(n<=20)return 'linear-gradient(145deg,#6ea8f5,#2563d4)';
+  if(n<=30)return 'linear-gradient(145deg,#f08080,#c0392b)';
+  if(n<=40)return 'linear-gradient(145deg,#7be8a0,#1a9c47)';
+  return 'linear-gradient(145deg,#b0b0c8,#606080)';
+}
+
+function renderBalls(nums, small=false){
+  const cls = small ? 'ms-ball' : 'ball';
+  return nums.map((n,i)=>`<div class="${cls} ${ballColor(n)}" style="animation-delay:${i*0.07}s">${n}</div>`).join('');
+}
+
+function generateSingle(){
+  const nums=generate(lottoMode);
+  lastSingleNums=nums;
+  const stage=document.getElementById('ball-stage');
+  const ex=stage.querySelector('.balls-row');
+  if(ex)ex.remove();
+  document.getElementById('ball-placeholder').style.display='none';
+  const row=document.createElement('div');
+  row.className='balls-row';
+  row.innerHTML=renderBalls(nums);
+  stage.insertBefore(row, stage.querySelector('.analysis-row'));
+  const ar=document.getElementById('analysis-row');
+  ar.innerHTML=analyzeNums(nums).map(t=>`<span class="a-tag ${t.cls}">${t.txt}</span>`).join('');
+  ar.style.display='flex';
+  document.getElementById('multi-sets').style.display='none';
+  document.getElementById('multi-sets').innerHTML='';
+  document.getElementById('lotto-save-btn').style.display='block';
+}
+
+function generateMulti(){
+  const sets=[];
+  for(let i=0;i<5;i++) sets.push(generate(lottoMode));
+  lastSingleNums=sets;
+  const stage=document.getElementById('ball-stage');
+  const ex=stage.querySelector('.balls-row');
+  if(ex)ex.remove();
+  document.getElementById('ball-placeholder').style.display='flex';
+  document.getElementById('analysis-row').style.display='none';
+  const ms=document.getElementById('multi-sets');
+  ms.style.display='flex';
+  ms.innerHTML=sets.map((nums,i)=>`
+    <div class="multi-set">
+      <div class="ms-head">
+        <span class="ms-label">${['A','B','C','D','E'][i]}세트 · ${nums.join(', ')}</span>
+        <button class="ms-copy" onclick="copyNums('${nums.join(', ')}')">복사</button>
+      </div>
+      <div class="ms-balls">${renderBalls(nums,true)}</div>
+    </div>`).join('');
+  document.getElementById('lotto-save-btn').style.display='block';
+}
+
+function copyNums(txt){
+  navigator.clipboard?.writeText(txt).then(()=>showToast('복사됐어요! 📋')).catch(()=>showToast(txt));
+}
+
+function saveLottoNumbers(){
+  if(!lastSingleNums) return;
+  const isMulti=Array.isArray(lastSingleNums[0]);
+  lottoHistory.unshift({
+    id:Date.now(), mode:lottoMode, ts:Date.now(),
+    dateStr:fmtDate(new Date()),
+    nums: isMulti ? lastSingleNums : [lastSingleNums],
+  });
+  saveLottoState();
+  renderLottoHistory();
+  showToast('저장됐어요 📌');
+  document.getElementById('lotto-save-btn').style.display='none';
+  lastSingleNums=null;
+}
+
+function delLottoEntry(id){
+  lottoHistory=lottoHistory.filter(e=>e.id!==id);
+  saveLottoState();
+  renderLottoHistory();
+}
+
+function renderLottoHistory(){
+  const el=document.getElementById('lh-list');
+  if(!el) return;
+  if(lottoHistory.length===0){
+    el.innerHTML=`<div class="lh-empty"><span class="lh-empty-e">🎱</span><p class="lh-empty-t">저장된 번호가 없어요</p></div>`;
+    return;
+  }
+  const modeLabel={basic:'랜덤',balanced:'균형',smart:'스마트'};
+  el.innerHTML=lottoHistory.map(e=>`
+    <div class="lh-item">
+      <div style="flex:1;min-width:0;">
+        ${e.nums.map(nums=>`<div class="lh-item-balls" style="margin-bottom:5px;">${nums.map(n=>`<div class="ms-ball ${ballColor(n)}" style="width:32px;height:32px;font-size:.72rem;">${n}</div>`).join('')}</div>`).join('')}
+        <p style="font-size:.65rem;color:var(--dim);margin-top:2px;">${e.dateStr} · ${modeLabel[e.mode]||e.mode}</p>
+      </div>
+      <button class="lh-del" onclick="delLottoEntry(${e.id})">✕</button>
+    </div>`).join('');
+}
+
+function initLottoPage(){
+  renderModeDesc();
+  renderLottoHistory();
+}
+
+// ============ LADDER ============
+let ladderItems = [];
+let ladderWinner = null;
+
+function openLadder() {
+  ladderItems = [];
+  ladderWinner = null;
+  document.getElementById('ladder-setup').style.display = 'block';
+  document.getElementById('ladder-game').style.display = 'none';
+  document.getElementById('ladder-modal').classList.add('open');
+
+  // 현재 추천 메뉴 + 랜덤 2개 후보 기본 세팅
+  const active = getActive();
+  const base = currentResultMenu ? currentResultMenu.name : '';
+  const others = active.filter(m => m.name !== base).sort(() => Math.random() - .5).slice(0, 2).map(m => m.name);
+  const defaults = base ? [base, ...others] : others.slice(0,3);
+
+  const cont = document.getElementById('ladder-inputs');
+  cont.innerHTML = '';
+  defaults.forEach(name => addLadderItem(name));
+}
+
+function addLadderItem(val = '') {
+  const items = document.getElementById('ladder-inputs');
+  if (items.children.length >= 4) { showToast('최대 4개까지 가능해요!'); return; }
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:7px;align-items:center;';
+  div.innerHTML = `
+    <input class="fi" style="flex:1;" placeholder="후보 이름" value="${val}" maxlength="12">
+    <button onclick="this.parentNode.remove()" style="background:transparent;border:1px solid rgba(255,80,80,.2);border-radius:7px;width:28px;height:28px;color:rgba(255,100,100,.5);cursor:pointer;font-size:.8rem;flex-shrink:0;">✕</button>`;
+  items.appendChild(div);
+}
+
+function closeLadder() {
+  document.getElementById('ladder-modal').classList.remove('open');
+}
+
+function startLadder() {
+  const inputs = document.querySelectorAll('#ladder-inputs input');
+  ladderItems = Array.from(inputs).map(i => i.value.trim()).filter(Boolean);
+  if (ladderItems.length < 2) { showToast('후보를 2개 이상 입력해주세요!'); return; }
+
+  document.getElementById('ladder-setup').style.display = 'none';
+  document.getElementById('ladder-game').style.display = 'block';
+  document.getElementById('ladder-result-text').style.display = 'none';
+  document.getElementById('ladder-result-sub').style.display = 'none';
+  document.getElementById('ladder-done-btns').style.display = 'none';
+
+  drawLadder();
+}
+
+function drawLadder() {
+  const canvas = document.getElementById('ladder-canvas');
+  const n = ladderItems.length;
+  const W = canvas.parentElement.clientWidth - 2;
+  const ROW = 8; // 가로줄 수
+  const H = 320;
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const colW = W / (n + 1);
+  const rowH = (H - 80) / (ROW + 1);
+  const topY = 50, botY = H - 30;
+
+  // 세로선 x좌표
+  const cols = Array.from({length: n}, (_, i) => colW * (i + 1));
+
+  // 가로줄 생성 (겹치지 않게)
+  const rungs = []; // {row, col} col은 0~n-2 (col과 col+1 연결)
+  for (let r = 1; r <= ROW; r++) {
+    const used = new Set();
+    const shuffled = Array.from({length: n-1}, (_,i)=>i).sort(()=>Math.random()-.5);
+    for (const c of shuffled) {
+      if (!used.has(c) && !used.has(c-1) && !used.has(c+1)) {
+        if (Math.random() < 0.55) { rungs.push({r, c}); used.add(c); }
+      }
+    }
+  }
+
+  // 그리기
+  ctx.clearRect(0, 0, W, H);
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+
+  // 세로선
+  cols.forEach(x => {
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+    ctx.beginPath(); ctx.moveTo(x, topY); ctx.lineTo(x, botY); ctx.stroke();
+  });
+
+  // 가로줄
+  rungs.forEach(({r, c}) => {
+    const y = topY + r * rowH;
+    ctx.strokeStyle = 'rgba(133,224,255,0.5)';
+    ctx.beginPath(); ctx.moveTo(cols[c], y); ctx.lineTo(cols[c+1], y); ctx.stroke();
+  });
+
+  // 상단 이름
+  ctx.font = 'bold 13px Pretendard, sans-serif';
+  ctx.textAlign = 'center';
+  ladderItems.forEach((name, i) => {
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(name.length > 5 ? name.slice(0,5)+'…' : name, cols[i], topY - 8);
+  });
+
+  // 하단 번호 (결과 자리)
+  const resultOrder = Array.from({length: n}, (_, i) => i + 1);
+  resultOrder.sort(() => Math.random() - .5);
+  cols.forEach((x, i) => {
+    ctx.fillStyle = 'rgba(255,206,133,0.7)';
+    ctx.font = 'bold 12px Pretendard, sans-serif';
+    ctx.fillText(`${resultOrder[i]}번`, x, botY + 16);
+  });
+
+  // 경로 추적 & 애니메이션
+  setTimeout(() => animateLadder(ctx, cols, topY, botY, rowH, rungs, ROW, resultOrder), 300);
+}
+
+function animateLadder(ctx, cols, topY, botY, rowH, rungs, ROW, resultOrder) {
+  const n = ladderItems.length;
+  const startIdx = Math.floor(Math.random() * n);
+  let col = startIdx;
+  const path = [{col, y: topY}];
+
+  for (let r = 1; r <= ROW; r++) {
+    const y = topY + r * rowH;
+    // 오른쪽 연결?
+    if (rungs.find(rg => rg.r === r && rg.c === col)) { col++; }
+    // 왼쪽 연결?
+    else if (col > 0 && rungs.find(rg => rg.r === r && rg.c === col - 1)) { col--; }
+    path.push({col, y});
+  }
+  path.push({col, y: botY});
+
+  ladderWinner = ladderItems[col];
+
+  // 애니메이션
+  let step = 0;
+  const total = path.length - 1;
+  function frame() {
+    if (step >= total) {
+      // 결과 표시
+      ctx.strokeStyle = '#ff9de2';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      for (let i = 0; i <= total; i++) {
+        const x = cols[path[i].col];
+        i === 0 ? ctx.moveTo(x, path[i].y) : ctx.lineTo(x, path[i].y);
+      }
+      ctx.stroke();
+
+      // 당첨 원
+      ctx.fillStyle = '#ff9de2';
+      ctx.beginPath();
+      ctx.arc(cols[path[total].col], botY, 7, 0, Math.PI * 2);
+      ctx.fill();
+
+      document.getElementById('ladder-result-text').textContent = `🎉 ${ladderWinner}`;
+      document.getElementById('ladder-result-sub').textContent = '사다리 결과예요! 이걸로 드실래요?';
+      document.getElementById('ladder-result-text').style.display = 'block';
+      document.getElementById('ladder-result-sub').style.display = 'block';
+      document.getElementById('ladder-done-btns').style.display = 'flex';
+      return;
+    }
+
+    // 현재까지 경로 그리기
+    ctx.strokeStyle = 'rgba(255,157,226,0.7)';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    for (let i = 0; i <= step + 1 && i < path.length; i++) {
+      const x = cols[path[i].col];
+      i === 0 ? ctx.moveTo(x, path[i].y) : ctx.lineTo(x, path[i].y);
+    }
+    ctx.stroke();
+
+    step++;
+    setTimeout(frame, 120);
+  }
+  frame();
+}
+
+function confirmLadderResult() {
+  if (!ladderWinner) return;
+  const found = menus.find(m => m.name === ladderWinner);
+  if (found) {
+    currentResultMenu = found;
+    showResult(found);
+  }
+  closeLadder();
+  openNoteModal();
+}
+
+// ============ INIT ============
+loadState();
+</script>
+</body>
+</html>
