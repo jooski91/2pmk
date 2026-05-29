@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#0a0a14">
 <title>2PMK</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-<link href="https://fonts.googleapis.com/css2?family=Boogaloo&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Gaegu:wght@700&family=Gowun+Dodum&display=swap" rel="stylesheet">
 <style>
 :root {
   --pink: #ff9de2; --gold: #ffce85; --blue: #85e0ff;
@@ -140,7 +140,9 @@ input:-webkit-autofill:focus {
   box-shadow: 0 2px 6px rgba(0,0,0,.3), inset 0 1px 2px rgba(255,255,255,.2); }
 
 /* SAVE HISTORY */
-.lotto-save-btn { width: 100%; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+.lotto-save-btn { width: 100%; background: linear-gradient(135deg, rgba(255,206,133,.25), rgba(133,224,255,.2)); border: 1px solid rgba(255,206,133,.5);
+  border-radius: 13px; padding: 13px; font-family: 'Pretendard', sans-serif;
+  font-size: .95rem; color: #ffce85; cursor: pointer; transition: all .15s; font-weight: 700; }
   border-radius: 13px; padding: 12px; font-family: 'Pretendard', sans-serif;
   font-size: .92rem; color: var(--sub); cursor: pointer; transition: all .15s; margin-bottom: 18px; }
 .lotto-save-btn:active { background: rgba(255,255,255,.1); color: var(--text); }
@@ -216,7 +218,7 @@ input:-webkit-autofill:focus {
   display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
 .game-header { text-align: center; margin-bottom: 20px; }
-.game-title { font-family: 'Pretendard', sans-serif; font-size: 2rem; font-weight: 800; line-height: 1.1;
+.game-title { font-family: 'Pretendard', sans-serif; font-size: 2.7rem; font-weight: 800; line-height: 1.1;
   color: #ffffff; -webkit-text-fill-color: #ffffff; }
 .game-sub { font-size: .8rem; color: var(--sub); margin-top: 4px; }
 
@@ -225,16 +227,23 @@ input:-webkit-autofill:focus {
 
 
 
-
 /* RESULT */
-.result-area { display: none; text-align: center; animation: fadeUp .4s ease; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-.res-emoji { font-size: 4.5rem; display: block; margin-bottom: 6px; animation: pop .5s ease; }
-@keyframes pop { 0%{transform:scale(0)} 65%{transform:scale(1.15)} 100%{transform:scale(1)} }
-.res-name { font-family: 'Pretendard', sans-serif; font-size: 1.9rem; font-weight: 800;
-  color: #ffffff; -webkit-text-fill-color: #ffffff; margin-bottom: 6px; }
-.res-desc { font-size: .83rem; color: rgba(240,234,255,.6); line-height: 1.55; margin-bottom: 12px; }
-.res-tags { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 12px; }
+.result-area { display: none; text-align: center; padding: 44px 0 32px; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+@keyframes pop { 0%{transform:scale(0) rotate(-8deg);opacity:0} 60%{transform:scale(1.22) rotate(3deg);opacity:1} 80%{transform:scale(.95) rotate(-1deg)} 100%{transform:scale(1) rotate(0)} }
+@keyframes nameBlast { 0%{transform:scale(0.4);opacity:0;letter-spacing:.3em} 55%{transform:scale(1.12);opacity:1;letter-spacing:.04em} 75%{transform:scale(.97)} 100%{transform:scale(1);letter-spacing:.03em} }
+.res-emoji { font-size: 4.5rem; display: block; margin-bottom: 10px; }
+.res-emoji.pop { animation: pop .55s cubic-bezier(.34,1.56,.64,1) forwards; }
+.res-name { font-family: 'Gaegu', cursive; font-size: 2.8rem; font-weight: 700;
+  background: linear-gradient(160deg, #fff5c0 0%, #ffd95a 35%, #e8a020 65%, #ffeaa0 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 10px; letter-spacing:.03em; line-height:1.1;
+  filter: drop-shadow(0 2px 8px rgba(255,180,0,.35)); }
+.res-name.blast { animation: nameBlast .5s cubic-bezier(.34,1.56,.64,1) forwards; }
+.res-desc { font-family: 'Gowun Dodum', 'Pretendard', sans-serif; font-size: .92rem; color: rgba(240,234,255,.65); line-height: 1.7; margin-bottom: 16px; opacity:0; transition: opacity .3s; padding: 0 8px; }
+.res-desc.show { opacity:1; }
+.res-tags { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 20px; opacity:0; transition: opacity .3s; }
+.res-tags.show { opacity:1; }
 .tag { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.13);
   border-radius: 20px; padding: 3px 10px; font-size: .72rem; color: rgba(240,234,255,.65); }
 .runner-up { margin-bottom: 12px; }
@@ -251,10 +260,10 @@ input:-webkit-autofill:focus {
 .eat-btn.eaten { background: linear-gradient(135deg,#7be8a0,#5bcfdc); }
 .eat-btn:disabled { opacity: .8; cursor: default; }
 
-.again-btn { width: 100%; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+.again-btn { width: 100%; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.3);
   border-radius: 13px; padding: 13px; font-family: 'Pretendard', sans-serif;
-  font-size: .95rem; color: var(--sub); cursor: pointer; transition: all .15s; }
-.again-btn:active { background: rgba(255,255,255,.1); }
+  font-size: .95rem; color: #ffffff; cursor: pointer; transition: all .15s; font-weight: 600; }
+.again-btn:active { background: rgba(255,255,255,.18); }
 .ladder-btn { width: 100%; background: rgba(133,224,255,.07); border: 1px solid rgba(133,224,255,.22);
   border-radius: 13px; padding: 13px; font-family: 'Pretendard', sans-serif;
   font-size: .95rem; color: #85e0ff; cursor: pointer; transition: all .15s; }
@@ -274,7 +283,8 @@ input:-webkit-autofill:focus {
 .spin-ring { width: 80px; height: 80px; border-radius: 50%;
   border: 3px solid rgba(255,157,226,.25); border-top-color: var(--pink);
   margin: 0 auto 8px; display: flex; align-items: center; justify-content: center;
-  font-size: 2rem; animation: spin .35s linear infinite; }
+  font-size: 2.2rem; }
+.spin-ring.spinning { animation: spin .3s linear infinite; }
 @keyframes spin { to{transform:rotate(360deg)} }
 .spin-name { font-family: 'Pretendard', sans-serif; font-size: 1rem; color: var(--sub); }
 
@@ -501,6 +511,18 @@ input:-webkit-autofill:focus {
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- MENU SETTINGS MODAL -->
+<div class="edit-modal-ov" id="menu-settings-modal">
+  <div class="edit-modal-box" style="max-height:80vh;display:flex;flex-direction:column;">
+    <div class="em-title">
+      <span>⚙ 메뉴 설정</span>
+      <button class="em-close" onclick="closeMenuSettings()">✕</button>
+    </div>
+    <p style="font-size:.75rem;color:var(--sub);margin-bottom:12px;">켜고 끄면 추천 목록에서 제외돼요</p>
+    <div id="menu-settings-list" style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:6px;margin-bottom:12px;"></div>
+  </div>
+</div>
+
 <!-- NOTE MODAL (bottom sheet) -->
 <div class="modal-ov" id="note-modal">
   <div class="modal-box">
@@ -569,6 +591,7 @@ input:-webkit-autofill:focus {
       </div>
     </div>
     <div id="ladder-game" style="display:none;">
+      <div id="ladder-num-btns" style="display:none;margin-bottom:10px;"></div>
       <canvas id="ladder-canvas" style="width:100%;border-radius:12px;display:block;"></canvas>
       <p id="ladder-result-text" style="text-align:center;font-size:1.1rem;font-weight:700;color:var(--text);margin:14px 0 4px;display:none;"></p>
       <p id="ladder-result-sub" style="text-align:center;font-size:.78rem;color:var(--sub);margin-bottom:14px;display:none;"></p>
@@ -587,7 +610,8 @@ input:-webkit-autofill:focus {
       <p class="game-title">🍽️ 오늘 뭐먹지?</p>
       <p class="game-sub">지금 당장 먹고 싶은 걸 찾아드려요</p>
     </div>
-    <div class="card">
+    <div class="card" style="position:relative;">
+      <button onclick="openMenuSettings()" style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:4px 9px;font-size:.72rem;color:rgba(255,255,255,.45);font-family:'Pretendard',sans-serif;cursor:pointer;z-index:2;">⚙ 메뉴 설정</button>
       <!-- 추천 버튼 -->
       <div id="pick-section">
         <div style="text-align:center;padding:10px 0 18px;">
@@ -595,14 +619,13 @@ input:-webkit-autofill:focus {
           <p style="font-family:'Pretendard',sans-serif;font-size:1.1rem;color:var(--sub);margin-bottom:4px;">오늘 뭐 먹을까요?</p>
           <p style="font-size:.76rem;color:var(--dim);">버튼을 누르면 바로 추천해드려요</p>
         </div>
-        <button class="gen-btn" style="font-size:1.15rem;padding:16px;margin-bottom:10px;border-radius:16px;" onclick="pickRandom()">오늘 뭐 먹지? 골라줘</button>
+        <button class="gen-btn" style="font-size:1.15rem;padding:16px;margin-bottom:10px;border-radius:16px;" onclick="pickRandom()">🎲 메뉴 뽑기!</button>
         <div class="roulette-wrap" id="roulette-wrap" style="display:none;">
-          <div class="spin-ring" id="spin-emoji">🍜</div>
-          <p class="spin-name" id="spin-name"></p>
+          <div class="spin-ring spinning" id="spin-emoji">🍜</div>
+          <p class="spin-name" id="spin-name">고르는 중...</p>
         </div>
       </div>
       <div class="result-area" id="result-area" style="display:none;">
-        <span class="res-emoji" id="res-emoji"></span>
         <p class="res-name" id="res-name"></p>
         <p class="res-desc" id="res-desc"></p>
         <div class="res-tags" id="res-tags"></div>
@@ -1012,28 +1035,26 @@ function pickRandom() {
   rw.style.display = 'block';
   const se = document.getElementById('spin-emoji');
   const sn = document.getElementById('spin-name');
-  se.style.animation = 'spin .3s linear infinite';
+  se.classList.add('spinning');
+  se.textContent = '🍽️';
   sn.textContent = '';
   sn.style.cssText = '';
 
-  let cnt = 0; const max = 20;
+  let cnt = 0; const max = 24;
   if (window._rlv) clearInterval(window._rlv);
   window._rlv = setInterval(() => {
     const r = active[Math.floor(Math.random() * active.length)];
     se.textContent = r.emoji;
-    sn.textContent = r.name;
     cnt++;
     if (cnt >= max) {
       clearInterval(window._rlv);
-      se.style.animation = 'none';
       const fin = active[Math.floor(Math.random() * active.length)];
       currentResultMenu = fin;
+      se.classList.remove('spinning');
       se.textContent = fin.emoji;
-      sn.style.cssText = "font-family:'Pretendard',sans-serif;font-size:1rem;color:#ff9de2;";
-      sn.textContent = fin.name + '!';
       setTimeout(() => showResult(fin), 400);
     }
-  }, 90);
+  }, 55);
 }
 
 function showResult(menu) {
@@ -1043,20 +1064,35 @@ function showResult(menu) {
 
   const ra = document.getElementById('result-area');
   ra.style.display = 'block';
-  ra.style.animation = 'none';
-  void ra.offsetWidth; // reflow
-  ra.style.animation = 'fadeUp .4s ease';
+  ra.style.opacity = '0';
 
-  document.getElementById('res-emoji').textContent = menu.emoji;
-  document.getElementById('res-name').textContent = menu.name;
-  document.getElementById('res-desc').textContent = menu.desc;
-  document.getElementById('res-tags').innerHTML = menu.tags.map(t=>`<span class="tag">#${t}</span>`).join('');
+  const nameEl = document.getElementById('res-name');
+  const descEl = document.getElementById('res-desc');
+  const tagsEl = document.getElementById('res-tags');
+
+  nameEl.textContent = menu.name;
+  descEl.textContent = menu.desc;
+  tagsEl.innerHTML = menu.tags.map(t=>`<span class="tag">#${t}</span>`).join('');
+  nameEl.classList.remove('blast');
+  descEl.classList.remove('show');
+  tagsEl.classList.remove('show');
+
+  // 1) 영역 페이드인
+  ra.style.transition = 'opacity .15s';
+  ra.style.opacity = '1';
+
+  // 2) 이름 팡
+  void nameEl.offsetWidth;
+  nameEl.classList.add('blast');
+
+  // 3) 설명+태그 딜레이
+  setTimeout(() => { descEl.classList.add('show'); tagsEl.classList.add('show'); }, 420);
 
   const eb = document.getElementById('eat-btn');
-  eb.textContent = '🍽️ 이걸로 먹을래!';
+  eb.textContent = '바로 먹자!';
   eb.classList.remove('eaten');
   eb.disabled = false;
-  document.getElementById('tip').textContent = '맛있게 드세요 🤤';
+  document.getElementById('tip').textContent = '맛있게 드세요 🌙';
 }
 
 function restart() {
@@ -1285,6 +1321,33 @@ function initLottoPage(){
   renderLottoHistory();
 }
 
+// ============ MENU SETTINGS ============
+function openMenuSettings() {
+  const list = document.getElementById('menu-settings-list');
+  list.innerHTML = menus.filter(m => !m.custom).map(m => `
+    <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 12px;">
+      <span style="font-size:.9rem;color:${m.enabled ? 'var(--text)' : 'var(--dim)'};">${m.emoji} ${m.name}</span>
+      <label style="position:relative;width:38px;height:22px;flex-shrink:0;">
+        <input type="checkbox" ${m.enabled ? 'checked' : ''} onchange="toggleMenu(${m.id},this.checked)"
+          style="opacity:0;width:0;height:0;position:absolute;">
+        <span style="position:absolute;inset:0;background:${m.enabled ? 'var(--pink)' : 'rgba(255,255,255,.12)'};border-radius:11px;transition:all .2s;cursor:pointer;"></span>
+        <span style="position:absolute;top:3px;left:${m.enabled ? '19px' : '3px'};width:16px;height:16px;background:#fff;border-radius:50%;transition:all .2s;pointer-events:none;"></span>
+      </label>
+    </div>`).join('');
+  document.getElementById('menu-settings-modal').classList.add('open');
+}
+
+function toggleMenu(id, enabled) {
+  const m = menus.find(m => m.id === id);
+  if (m) { m.enabled = enabled; saveState(); }
+  // 토글 스위치 색/위치 즉시 갱신
+  openMenuSettings();
+}
+
+function closeMenuSettings() {
+  document.getElementById('menu-settings-modal').classList.remove('open');
+}
+
 // ============ LADDER ============
 let ladderItems = [];
 let ladderWinner = null;
@@ -1340,21 +1403,20 @@ function drawLadder() {
   const canvas = document.getElementById('ladder-canvas');
   const n = ladderItems.length;
   const W = canvas.parentElement.clientWidth - 2;
-  const ROW = 8; // 가로줄 수
-  const H = 320;
+  const ROW = 8;
+  const H = 300;
   canvas.width = W;
   canvas.height = H;
   const ctx = canvas.getContext('2d');
 
   const colW = W / (n + 1);
-  const rowH = (H - 80) / (ROW + 1);
-  const topY = 50, botY = H - 30;
+  const rowH = (H - 60) / (ROW + 1);
+  const topY = 24, botY = H - 24;
 
-  // 세로선 x좌표
   const cols = Array.from({length: n}, (_, i) => colW * (i + 1));
 
-  // 가로줄 생성 (겹치지 않게)
-  const rungs = []; // {row, col} col은 0~n-2 (col과 col+1 연결)
+  // 가로줄 생성
+  const rungs = [];
   for (let r = 1; r <= ROW; r++) {
     const used = new Set();
     const shuffled = Array.from({length: n-1}, (_,i)=>i).sort(()=>Math.random()-.5);
@@ -1365,104 +1427,136 @@ function drawLadder() {
     }
   }
 
-  // 그리기
+  // 모든 번호의 도착 메뉴 미리 계산 (메뉴 섞기)
+  const shuffledMenus = [...ladderItems].sort(() => Math.random() - .5);
+  // 각 출발 번호(0~n-1)가 어디 도착하는지 계산
+  const destOf = Array.from({length: n}, (_, startCol) => {
+    let col = startCol;
+    for (let r = 1; r <= ROW; r++) {
+      if (rungs.find(rg => rg.r === r && rg.c === col)) col++;
+      else if (col > 0 && rungs.find(rg => rg.r === r && rg.c === col-1)) col--;
+    }
+    return col;
+  });
+  // destOf[i] = i번 출발 → destOf[i]번 열 도착
+  // 하단에 shuffledMenus를 배치: 열 destOf[i]에 shuffledMenus[i] 표시
+  const bottomLabel = Array(n).fill('');
+  destOf.forEach((dest, start) => { bottomLabel[dest] = shuffledMenus[start]; });
+
+  // 저장
+  canvas._cols = cols; canvas._topY = topY; canvas._botY = botY;
+  canvas._rowH = rowH; canvas._rungs = rungs; canvas._ROW = ROW;
+  canvas._destOf = destOf; canvas._bottomLabel = bottomLabel;
+
+  // 기본 사다리 그리기
+  renderLadderBase(ctx, cols, topY, botY, rowH, rungs, n, bottomLabel);
+
+  // 상단 번호 버튼 생성
+  const btnArea = document.getElementById('ladder-num-btns');
+  btnArea.innerHTML = '';
+  btnArea.style.display = 'flex';
+  btnArea.style.justifyContent = 'space-around';
+  btnArea.style.marginBottom = '10px';
+  for (let i = 0; i < n; i++) {
+    const btn = document.createElement('button');
+    btn.textContent = `${i+1}번`;
+    btn.style.cssText = `flex:1;margin:0 4px;padding:9px 0;background:rgba(133,224,255,.1);border:1.5px solid rgba(133,224,255,.35);border-radius:10px;color:#85e0ff;font-family:'Pretendard',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .15s;`;
+    btn.onclick = () => chooseLadderNum(i);
+    btnArea.appendChild(btn);
+  }
+}
+
+function renderLadderBase(ctx, cols, topY, botY, rowH, rungs, n, bottomLabel) {
+  const W = ctx.canvas.width, H = ctx.canvas.height;
   ctx.clearRect(0, 0, W, H);
-  ctx.lineWidth = 3;
-  ctx.lineCap = 'round';
+  ctx.lineWidth = 2.5; ctx.lineCap = 'round';
 
   // 세로선
   cols.forEach(x => {
-    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
     ctx.beginPath(); ctx.moveTo(x, topY); ctx.lineTo(x, botY); ctx.stroke();
   });
 
   // 가로줄
   rungs.forEach(({r, c}) => {
     const y = topY + r * rowH;
-    ctx.strokeStyle = 'rgba(133,224,255,0.5)';
+    ctx.strokeStyle = 'rgba(133,224,255,0.45)';
     ctx.beginPath(); ctx.moveTo(cols[c], y); ctx.lineTo(cols[c+1], y); ctx.stroke();
   });
 
-  // 상단 이름
-  ctx.font = 'bold 13px Pretendard, sans-serif';
+  // 하단 메뉴 이름
+  ctx.font = 'bold 12px Pretendard, sans-serif';
   ctx.textAlign = 'center';
-  ladderItems.forEach((name, i) => {
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(name.length > 5 ? name.slice(0,5)+'…' : name, cols[i], topY - 8);
+  bottomLabel.forEach((name, i) => {
+    ctx.fillStyle = 'rgba(255,206,133,0.85)';
+    const label = name.length > 5 ? name.slice(0,5)+'…' : name;
+    ctx.fillText(label, cols[i], botY + 16);
   });
-
-  // 하단 번호 (결과 자리)
-  const resultOrder = Array.from({length: n}, (_, i) => i + 1);
-  resultOrder.sort(() => Math.random() - .5);
-  cols.forEach((x, i) => {
-    ctx.fillStyle = 'rgba(255,206,133,0.7)';
-    ctx.font = 'bold 12px Pretendard, sans-serif';
-    ctx.fillText(`${resultOrder[i]}번`, x, botY + 16);
-  });
-
-  // 경로 추적 & 애니메이션
-  setTimeout(() => animateLadder(ctx, cols, topY, botY, rowH, rungs, ROW, resultOrder), 300);
 }
 
-function animateLadder(ctx, cols, topY, botY, rowH, rungs, ROW, resultOrder) {
+function chooseLadderNum(startIdx) {
+  const canvas = document.getElementById('ladder-canvas');
+  const ctx = canvas.getContext('2d');
+  const {_cols:cols, _topY:topY, _botY:botY, _rowH:rowH, _rungs:rungs, _ROW:ROW, _destOf:destOf, _bottomLabel:bottomLabel} = canvas;
   const n = ladderItems.length;
-  const startIdx = Math.floor(Math.random() * n);
-  let col = startIdx;
-  const path = [{col, y: topY}];
 
+  // 버튼 비활성화
+  document.querySelectorAll('#ladder-num-btns button').forEach((b,i) => {
+    b.style.opacity = i === startIdx ? '1' : '0.3';
+    b.style.pointerEvents = 'none';
+    if (i === startIdx) b.style.background = 'rgba(255,157,226,0.25)';
+    if (i === startIdx) b.style.borderColor = '#ff9de2';
+    if (i === startIdx) b.style.color = '#ff9de2';
+  });
+
+  // 경로 계산
+  const path = [{col: startIdx, y: topY}];
+  let col = startIdx;
   for (let r = 1; r <= ROW; r++) {
     const y = topY + r * rowH;
-    // 오른쪽 연결?
-    if (rungs.find(rg => rg.r === r && rg.c === col)) { col++; }
-    // 왼쪽 연결?
-    else if (col > 0 && rungs.find(rg => rg.r === r && rg.c === col - 1)) { col--; }
+    if (rungs.find(rg => rg.r === r && rg.c === col)) col++;
+    else if (col > 0 && rungs.find(rg => rg.r === r && rg.c === col-1)) col--;
     path.push({col, y});
   }
   path.push({col, y: botY});
 
-  ladderWinner = ladderItems[col];
+  ladderWinner = bottomLabel[col];
 
   // 애니메이션
+  renderLadderBase(ctx, cols, topY, botY, rowH, rungs, n, bottomLabel);
   let step = 0;
   const total = path.length - 1;
+
   function frame() {
-    if (step >= total) {
-      // 결과 표시
-      ctx.strokeStyle = '#ff9de2';
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      for (let i = 0; i <= total; i++) {
-        const x = cols[path[i].col];
-        i === 0 ? ctx.moveTo(x, path[i].y) : ctx.lineTo(x, path[i].y);
-      }
-      ctx.stroke();
+    renderLadderBase(ctx, cols, topY, botY, rowH, rungs, n, bottomLabel);
 
-      // 당첨 원
-      ctx.fillStyle = '#ff9de2';
-      ctx.beginPath();
-      ctx.arc(cols[path[total].col], botY, 7, 0, Math.PI * 2);
-      ctx.fill();
-
-      document.getElementById('ladder-result-text').textContent = `🎉 ${ladderWinner}`;
-      document.getElementById('ladder-result-sub').textContent = '사다리 결과예요! 이걸로 드실래요?';
-      document.getElementById('ladder-result-text').style.display = 'block';
-      document.getElementById('ladder-result-sub').style.display = 'block';
-      document.getElementById('ladder-done-btns').style.display = 'flex';
-      return;
-    }
-
-    // 현재까지 경로 그리기
-    ctx.strokeStyle = 'rgba(255,157,226,0.7)';
-    ctx.lineWidth = 4;
+    // 진행 경로 그리기
+    ctx.strokeStyle = 'rgba(255,157,226,0.85)';
+    ctx.lineWidth = 4; ctx.lineCap = 'round';
     ctx.beginPath();
-    for (let i = 0; i <= step + 1 && i < path.length; i++) {
+    for (let i = 0; i <= Math.min(step+1, total); i++) {
       const x = cols[path[i].col];
       i === 0 ? ctx.moveTo(x, path[i].y) : ctx.lineTo(x, path[i].y);
     }
     ctx.stroke();
 
+    if (step >= total) {
+      // 도착 원
+      ctx.fillStyle = '#ff9de2';
+      ctx.beginPath();
+      ctx.arc(cols[path[total].col], botY, 6, 0, Math.PI*2);
+      ctx.fill();
+
+      // 결과 표시
+      document.getElementById('ladder-result-text').textContent = `🎉 ${ladderWinner}`;
+      document.getElementById('ladder-result-sub').textContent = '사다리 결과! 이걸로 드실래요?';
+      document.getElementById('ladder-result-text').style.display = 'block';
+      document.getElementById('ladder-result-sub').style.display = 'block';
+      document.getElementById('ladder-done-btns').style.display = 'flex';
+      return;
+    }
     step++;
-    setTimeout(frame, 120);
+    setTimeout(frame, 110);
   }
   frame();
 }
