@@ -59,10 +59,12 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard',sans-serif;col
   position:fixed;
   z-index:150;
   background:#8ecae6;
-  top:0;left:0;
-  width:100dvw;
-  height:100dvh;
+  top:50%;left:50%;
+  width:100svh;
+  height:100svw;
   margin:0;padding:0;
+  transform:translate(-50%,-50%) rotate(90deg);
+  transform-origin:center center;
   overflow:hidden;
 }
 .map-fullscreen-btn{position:absolute;top:10px;right:10px;z-index:20;width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,0.88);border:1px solid rgba(0,0,0,0.1);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 6px rgba(0,0,0,0.15);}
@@ -838,8 +840,8 @@ function toggleMapFullscreen(){
     if(isFs){
       const screenW = window.innerWidth;
       const screenH = window.innerHeight;
-      // 화면 비율에 맞게 viewBox 설정 (높이 340 기준)
-      const vw = Math.round(340 * screenW / screenH);
+      // rotate(90deg) 후 지도 가로=screenH, 세로=screenW
+      const vw = Math.round(340 * screenH / screenW);
       svg.setAttribute('viewBox', `0 0 ${vw} 340`);
     } else {
       svg.setAttribute('viewBox','0 0 500 340');
@@ -853,7 +855,7 @@ window.addEventListener('resize',()=>{
   const wrap=document.getElementById('map-wrap');
   if(!wrap.classList.contains('fullscreen')) return;
   const svg=document.getElementById('map-svg');
-  const vw=Math.round(340*window.innerWidth/window.innerHeight);
+  const vw=Math.round(340*window.innerHeight/window.innerWidth);
   svg.setAttribute('viewBox',`0 0 ${vw} 340`);
   renderMap();
 });
