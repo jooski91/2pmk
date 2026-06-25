@@ -55,7 +55,17 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard',sans-serif;col
 /* ── Map ── */
 .map-wrap{flex:1;position:relative;overflow:hidden;display:none;}
 .map-wrap.show{display:block;}
-.map-wrap.fullscreen{position:fixed;inset:0;z-index:150;background:#8ecae6;}
+.map-wrap.fullscreen{
+  position:fixed;
+  z-index:150;
+  background:#8ecae6;
+  /* 세로폰을 90도 회전해서 가로로 꽉 채우기 */
+  top:50%;left:50%;
+  width:100vh;   /* 회전 후 가로 = 화면 세로 길이 */
+  height:100vw;  /* 회전 후 세로 = 화면 가로 길이 */
+  transform:translate(-50%,-50%) rotate(90deg);
+  transform-origin:center center;
+}
 .map-fullscreen-btn{position:absolute;top:10px;right:10px;z-index:20;width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,0.88);border:1px solid rgba(0,0,0,0.1);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 6px rgba(0,0,0,0.15);}
 .map-exit-btn{position:absolute;top:10px;left:10px;z-index:20;padding:6px 14px;border-radius:20px;background:rgba(255,255,255,0.88);border:1px solid rgba(0,0,0,0.1);font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,0.15);display:none;}
 .map-wrap.fullscreen .map-exit-btn{display:flex;align-items:center;gap:5px;}
@@ -821,28 +831,22 @@ function closeInfo(){document.getElementById('map-info').classList.remove('show'
 function toggleMapFullscreen(){
   const wrap = document.getElementById('map-wrap');
   const isFs = wrap.classList.toggle('fullscreen');
-  if(isFs){
-    // 가로모드 강제: Screen Orientation API
-    try { screen.orientation.lock('landscape').catch(()=>{}); } catch(e){}
-    document.body.style.overflow='hidden';
-  } else {
-    try { screen.orientation.unlock(); } catch(e){}
-    document.body.style.overflow='';
-  }
-  // SVG viewBox를 화면 비율에 맞게 조정
+  document.body.style.overflow = isFs ? 'hidden' : '';
+
   setTimeout(()=>{
     const svg = document.getElementById('map-svg');
     if(isFs){
-      const w = window.innerWidth, h = window.innerHeight;
-      const aspect = w/h;
-      // 가로가 더 길면 가로 기준 viewBox 확장
-      const vw = Math.round(340*aspect);
+      // 회전 후 실제 지도 가로 = 화면 세로(vh), 세로 = 화면 가로(vw)
+      const mapW = window.innerHeight; // 회전되므로 세로가 가로가 됨
+      const mapH = window.innerWidth;
+      const aspect = mapW / mapH;
+      const vw = Math.round(340 * aspect);
       svg.setAttribute('viewBox', `0 0 ${vw} 340`);
     } else {
       svg.setAttribute('viewBox','0 0 500 340');
     }
     renderMap();
-  }, 50);
+  }, 60);
 }
 
 // 전체화면 중 ESC/뒤로가기
