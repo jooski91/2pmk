@@ -489,7 +489,7 @@ function renderMap(){
   const defs=mk('defs',{});
   // 바다 그라디언트
   const seaGrad=mk('linearGradient',{id:'seaGrad',x1:'0%',y1:'0%',x2:'100%',y2:'100%'});
-  seaGrad.appendChild(mk('stop',{offset:'0%','stop-color':'#b8dff0'}));
+  seaGrad.appendChild(mk('stop',{offset:'0%','stop-color':'#00000'}));
   seaGrad.appendChild(mk('stop',{offset:'100%','stop-color':'#8ecae6'}));
   defs.appendChild(seaGrad);
   // 섬 그라디언트
