@@ -1129,14 +1129,13 @@ function showShareModal(url){
     <div style="background:#fff;border-radius:20px 20px 0 0;padding:24px 20px calc(28px + env(safe-area-inset-bottom));width:100%;max-width:480px;">
       <div style="width:36px;height:4px;background:#ddd;border-radius:2px;margin:0 auto 18px;"></div>
       <div style="font-size:16px;font-weight:700;margin-bottom:6px;">🔗 일정 공유하기</div>
-      <div style="font-size:12px;color:#888;margin-bottom:14px;">아래 링크를 복사해서 공유하세요</div>
-      <div style="display:flex;gap:8px;">
-        <input id="share-url-input" readonly value="${url}"
-          style="flex:1;padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:11px;color:#444;background:#f8f8f8;outline:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" />
-        <button onclick="copyShareURL()" style="padding:10px 14px;background:#8a6e4b;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">복사</button>
-      </div>
+      <div style="font-size:12px;color:#888;margin-bottom:10px;">링크를 길게 눌러 전체 선택하거나, 복사 버튼을 눌러주세요</div>
+      <textarea id="share-url-input" readonly
+        style="width:100%;height:72px;padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:11px;color:#444;background:#f8f8f8;outline:none;resize:none;word-break:break-all;line-height:1.5;font-family:monospace;"
+        onclick="this.select()">${url}</textarea>
+      <button onclick="copyShareURL()" style="width:100%;margin-top:8px;padding:12px;background:#8a6e4b;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;">📋 링크 복사</button>
       <button onclick="document.getElementById('share-modal').remove()"
-        style="width:100%;margin-top:12px;padding:12px;background:#f0ece5;border:none;border-radius:10px;font-size:14px;color:#666;cursor:pointer;">닫기</button>
+        style="width:100%;margin-top:8px;padding:12px;background:#f0ece5;border:none;border-radius:10px;font-size:14px;color:#666;cursor:pointer;">닫기</button>
     </div>
   `;
   modal.addEventListener('click', e=>{ if(e.target===modal) modal.remove(); });
@@ -1144,13 +1143,19 @@ function showShareModal(url){
 }
 
 function copyShareURL(){
-  const input = document.getElementById('share-url-input');
-  input.select();
-  try {
+  const el = document.getElementById('share-url-input');
+  const url = el.value;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(()=>{
+      showToast('링크가 복사됐어요 📋');
+      setTimeout(()=>document.getElementById('share-modal')?.remove(), 800);
+    }).catch(()=>{ el.select(); document.execCommand('copy'); });
+  } else {
+    el.select();
     document.execCommand('copy');
     showToast('링크가 복사됐어요 📋');
     setTimeout(()=>document.getElementById('share-modal')?.remove(), 800);
-  } catch(e){}
+  }
 }
 
 function showBtnConfirm(btn, confirmText, originalText){
