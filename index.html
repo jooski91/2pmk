@@ -35,11 +35,11 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard',sans-serif;col
 /* ── Tab bar (bottom nav style for days) ── */
 .day-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;overflow-x:auto;scrollbar-width:none;flex-shrink:0;padding:0 4px;}
 .day-bar::-webkit-scrollbar{display:none;}
-.day-tab{padding:10px 14px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;white-space:nowrap;border-bottom:2.5px solid transparent;display:flex;align-items:center;gap:5px;flex-shrink:0;}
+.day-tab{padding:7px 12px;font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;white-space:nowrap;border-bottom:2.5px solid transparent;display:flex;align-items:center;gap:4px;flex-shrink:0;}
 .day-tab.active{color:var(--teal);border-bottom-color:var(--teal);}
 .day-tab-x{font-size:13px;color:var(--text3);min-width:28px;min-height:28px;display:flex;align-items:center;justify-content:center;margin-left:-2px;margin-right:-6px;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;}
 .day-tab-x:active{color:#c0392b;}
-.day-add-btn{padding:8px 10px;font-size:18px;color:var(--text3);cursor:pointer;flex-shrink:0;border:none;background:none;font-family:inherit;}
+.day-add-btn{padding:5px 10px;font-size:17px;color:var(--text3);cursor:pointer;flex-shrink:0;border:none;background:none;font-family:inherit;}
 .day-add-btn:active{color:var(--teal);}
 
 /* ── View toggle ── */
@@ -172,15 +172,14 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard',sans-serif;col
 
 <!-- Header -->
 <div class="hdr">
-  <div class="hdr-icon">🌿</div>
+  <div class="hdr-icon">🍊</div>
   <div>
     <div class="hdr-title">제주 여행 플래너</div>
     <div class="hdr-sub" id="hdr-sub">일정을 만들어보세요</div>
   </div>
   <div class="hdr-right">
-    <button class="hdr-btn" id="save-btn" onclick="saveFile()">💾</button>
     <button class="hdr-btn" id="share-btn" onclick="shareURL()">🔗</button>
-    <button class="hdr-btn" onclick="exportTxt()">text</button>
+    <button class="hdr-btn" onclick="exportTxt()">📤</button>
   </div>
 </div>
 
@@ -389,11 +388,16 @@ let touchStartY=0;
 function getDay(id){return days.find(d=>d.id===id);}
 function getActive(){return getDay(activeDayId);}
 
+function autoSave(){
+  try { localStorage.setItem('jeju_planner_data', JSON.stringify({days, activeDayId, nextId, nextDayId})); } catch(e){}
+}
+
 function renderAll(){
   renderDayBar();
   renderList();
   renderMap();
   updateSub();
+  autoSave();
 }
 
 function updateSub(){
@@ -990,21 +994,6 @@ function urlToState(encoded){
 }
 
 // ══════════════════════════════════════════════
-// Save System (localStorage + URL 동기화)
-// ══════════════════════════════════════════════
-async function saveFile(){
-  const btn = document.getElementById('save-btn');
-  try {
-    localStorage.setItem('jeju_planner_data', JSON.stringify({days, activeDayId, nextId, nextDayId}));
-    // URL hash에도 상태 반영 (북마크용)
-    const encoded = stateToURL();
-    if(encoded) history.replaceState(null, '', '#' + encoded);
-    showBtnConfirm(btn, '✅', '💾 저장');
-  } catch(e){
-    alert('저장 실패: 저장 공간이 부족할 수 있어요.');
-  }
-}
-
 // ══════════════════════════════════════════════
 // 공유 URL 생성 & 복사
 // ══════════════════════════════════════════════
@@ -1118,7 +1107,7 @@ function showToast(msg, duration=2800){
 document.addEventListener('keydown', e=>{
   if((e.ctrlKey||e.metaKey) && e.key==='s'){
     e.preventDefault();
-    saveFile();
+    shareURL();
   }
   if(e.key==='Enter' && document.activeElement.closest('.sheet')) addPlace();
   if(e.key==='Escape') closeAll();
