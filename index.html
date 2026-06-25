@@ -1145,7 +1145,7 @@ function loadFromStorage(){
 function exportTxt(){
   let t='🍊 제주 여행 플래너\n'+'─'.repeat(28)+'\n\n';
   days.forEach(d=>{
-    t+=`📅 ${d.label}\n`;
+    t+=`${d.label}\n`;
     d.places.forEach((p,i)=>{
       t+=`  ${i+1}. [${p.cat}] ${p.name}`;
       if(p.time)t+=` (${p.time})`;
